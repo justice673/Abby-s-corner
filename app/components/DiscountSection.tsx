@@ -43,14 +43,21 @@ export default function DiscountSection() {
     return d;
   });
 
-  const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(target));
+  const [mounted, setMounted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, expired: false });
 
   useEffect(() => {
+    setMounted(true);
+    setTimeLeft(getTimeLeft(target));
+  }, [target]);
+
+  useEffect(() => {
+    if (!mounted) return;
     const timer = setInterval(() => {
       setTimeLeft(getTimeLeft(target));
     }, 1000);
     return () => clearInterval(timer);
-  }, [target]);
+  }, [mounted, target]);
 
   return (
     <section className="relative flex min-h-[420px] items-center justify-center overflow-hidden sm:min-h-[480px] md:min-h-[520px]">

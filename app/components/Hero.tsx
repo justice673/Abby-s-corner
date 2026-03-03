@@ -13,18 +13,21 @@ export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowVideo(true);
-    }, DELAY_BEFORE_VIDEO_MS);
+    const timer = setTimeout(() => setShowVideo(true), DELAY_BEFORE_VIDEO_MS);
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    if (!showVideo) return;
     const video = videoRef.current;
     if (!video) return;
-    video.play().catch(() => {});
-  }, [showVideo]);
+
+    const playVideo = () => {
+      video.play().catch(() => {});
+    };
+
+    video.addEventListener("loadeddata", playVideo, { once: true });
+    if (video.readyState >= 2) playVideo();
+  }, []);
 
   return (
     <section className="relative w-full overflow-hidden">
@@ -52,6 +55,8 @@ export default function Hero() {
           muted
           playsInline
           loop
+          preload="auto"
+          autoPlay
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
             showVideo ? "opacity-100" : "opacity-0"
           }`}
