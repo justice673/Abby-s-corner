@@ -4,6 +4,7 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import LikesHero from "../components/LikesHero";
 import { FiHeart, FiShoppingCart } from "react-icons/fi";
+import { useCart } from "@/app/context/CartContext";
 import { formatPriceCFA } from "@/lib/utils";
 
 const likedProducts = [
@@ -64,9 +65,11 @@ const likedProducts = [
 function ProductCard({
   product,
   onRemove,
+  onAddToCart,
 }: {
   product: (typeof likedProducts)[0];
   onRemove: () => void;
+  onAddToCart: () => void;
 }) {
   return (
     <div className="group flex flex-col overflow-hidden bg-white shadow-sm transition-shadow hover:shadow-md">
@@ -121,6 +124,7 @@ function ProductCard({
         </div>
         <button
           type="button"
+          onClick={onAddToCart}
           className="mt-2 flex w-full items-center justify-center gap-2 rounded border border-(--brand-primary)/30 bg-(--brand-light) py-2 text-xs font-semibold text-(--brand-primary) transition hover:bg-(--brand-primary)/5"
         >
           <FiShoppingCart className="h-4 w-4" />
@@ -132,6 +136,7 @@ function ProductCard({
 }
 
 export default function LikesPage() {
+  const { addItem } = useCart();
   const [products, setProducts] = useState(likedProducts);
 
   const removeFromLikes = (id: string) => {
@@ -159,6 +164,7 @@ export default function LikesPage() {
                     key={product.id}
                     product={product}
                     onRemove={() => removeFromLikes(product.id)}
+                    onAddToCart={() => addItem(product.id)}
                   />
                 ))}
               </div>

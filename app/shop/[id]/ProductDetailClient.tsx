@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FiHeart, FiShoppingCart, FiShare2, FiShield } from "react-icons/fi";
+import { useCart } from "@/app/context/CartContext";
 import { IoStar, IoStarOutline } from "react-icons/io5";
 import { formatPriceCFA } from "@/lib/utils";
 import {
@@ -36,6 +37,7 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function ProductDetailClient({ product }: { product: Product }) {
+  const { addItem } = useCart();
   const [isLiked, setIsLiked] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const categoryLabel = categoryLabels[product.category] ?? product.category;
@@ -193,7 +195,8 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           {/* Add to cart */}
           <button
             type="button"
-            className="mt-6 w-full rounded-full bg-emerald-600 py-3.5 text-base font-semibold text-white transition hover:bg-emerald-700 sm:w-auto sm:px-10"
+            onClick={() => addItem(product.id)}
+            className="mt-6 w-full rounded-full bg-(--brand-primary) py-3.5 text-base font-semibold text-(--brand-light) transition hover:bg-[#4a101a] sm:w-auto sm:px-10"
           >
             <span className="flex items-center justify-center gap-2">
               <FiShoppingCart className="h-5 w-5" />

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useCart } from "@/app/context/CartContext";
 import Image from "next/image";
 import {
   FiMenu,
@@ -90,6 +91,7 @@ const maisonItems = [
 ];
 
 export default function Navbar() {
+  const { openCart, totalItems } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const [openMegaMenu, setOpenMegaMenu] = useState<"marques" | "maison" | null>(
     null,
@@ -128,10 +130,16 @@ export default function Navbar() {
             </Link>
             <button
               type="button"
-              aria-label="Cart"
-              className="rounded-full border border-(--brand-primary)/15 p-2 text-(--brand-primary) transition hover:border-(--brand-primary)/40 hover:bg-white"
+              aria-label="Panier"
+              onClick={openCart}
+              className="relative rounded-full border border-(--brand-primary)/15 p-2 text-(--brand-primary) transition hover:border-(--brand-primary)/40 hover:bg-white"
             >
               <FiShoppingBag className="h-4 w-4" />
+              {totalItems > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-(--brand-primary) text-[10px] font-bold text-(--brand-light)">
+                  {totalItems > 9 ? "9+" : totalItems}
+                </span>
+              )}
             </button>
             <Link
               href="/login"

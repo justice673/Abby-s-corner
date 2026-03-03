@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import FooterWrapper from "./components/FooterWrapper";
 import ScrollToTop from "./components/ScrollToTop";
+import CartProvider from "./components/CartProvider";
 
 const headingFont = localFont({
   src: [
@@ -58,9 +59,11 @@ export default function RootLayout({
       <body
         className={`${headingFont.variable} ${bodyFont.variable} antialiased`}
       >
-        {children}
-        <FooterWrapper />
-        <ScrollToTop />
+        <CartProvider>
+          {children}
+          <FooterWrapper />
+          <ScrollToTop />
+        </CartProvider>
       </body>
     </html>
   );

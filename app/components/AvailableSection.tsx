@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FiHeart, FiShoppingCart } from "react-icons/fi";
+import { useCart } from "@/app/context/CartContext";
 import { formatPriceCFA } from "@/lib/utils";
 import { products } from "@/lib/products";
 
@@ -10,10 +11,12 @@ function ProductCard({
   product,
   isLiked,
   onLike,
+  onAddToCart,
 }: {
   product: (typeof products)[0];
   isLiked: boolean;
   onLike: () => void;
+  onAddToCart: () => void;
 }) {
   return (
     <Link
@@ -86,6 +89,7 @@ function ProductCard({
 }
 
 export default function AvailableSection() {
+  const { addItem } = useCart();
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
 
   const toggleLike = (id: string) => {
@@ -115,6 +119,7 @@ export default function AvailableSection() {
             product={product}
             isLiked={likedIds.has(product.id)}
             onLike={() => toggleLike(product.id)}
+            onAddToCart={() => addItem(product.id)}
           />
         ))}
       </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 import { FiHeart, FiShoppingCart, FiRefreshCw, FiChevronDown } from "react-icons/fi";
+import { useCart } from "@/app/context/CartContext";
 import { formatPriceCFA } from "@/lib/utils";
 import { products } from "@/lib/products";
 
@@ -35,10 +36,12 @@ function ProductCard({
   product,
   isLiked,
   onLike,
+  onAddToCart,
 }: {
   product: (typeof products)[0];
   isLiked: boolean;
   onLike: () => void;
+  onAddToCart: () => void;
 }) {
   return (
     <Link
@@ -99,6 +102,7 @@ function ProductCard({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
+            onAddToCart();
           }}
           className="mt-2 flex w-full items-center justify-center gap-2 rounded border border-(--brand-primary)/30 bg-(--brand-light) py-2 text-xs font-semibold text-(--brand-primary) transition hover:bg-(--brand-primary)/5 sm:mt-3"
         >
@@ -111,6 +115,7 @@ function ProductCard({
 }
 
 export default function ShopPage() {
+  const { addItem } = useCart();
   const [categoryFilters, setCategoryFilters] = useState<Set<string>>(new Set());
   const [conditionFilters, setConditionFilters] = useState<Set<string>>(new Set());
   const [volumeFilters, setVolumeFilters] = useState<Set<string>>(new Set());
@@ -312,6 +317,7 @@ export default function ShopPage() {
                       return next;
                     });
                   }}
+                  onAddToCart={() => addItem(product.id)}
                 />
               ))}
             </div>
