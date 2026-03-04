@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 /** Format price in CFA (Senegal currency). Uses space as thousands separator. */
 export function formatPriceCFA(amount: number): string {
-  return `${amount.toLocaleString("fr-FR").replace(/\s/g, " ")} FCFA`;
+  return `${amount.toLocaleString("en-US")} FCFA`;
 }
 
 /** Approximate conversion: 1 EUR ≈ 656 FCFA */

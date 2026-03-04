@@ -87,13 +87,13 @@ function ProductCard({
               e.preventDefault();
               onRemove();
             }}
-            aria-label="Retirer des favoris"
+            aria-label="Remove from favorites"
             className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-(--brand-primary) shadow-sm transition hover:bg-white"
           >
             <FiHeart className="h-4 w-4 fill-(--brand-primary) text-(--brand-primary)" />
           </button>
           <span className="absolute bottom-2 right-2 bg-white rounded-full border-2 border-emerald-500 px-2.5 py-1 text-xs font-semibold text-emerald-600">
-            {product.stockLeft} restant{product.stockLeft > 1 ? "s" : ""}
+            {product.stockLeft} left
           </span>
         </div>
       </a>
@@ -118,9 +118,9 @@ function ProductCard({
           {formatPriceCFA(product.price)}
         </p>
         <div className="space-y-0.5 text-xs text-gray-800">
-          <p><span className="font-medium text-(--brand-primary)">Tête:</span> {product.tete}</p>
-          <p><span className="font-medium text-(--brand-primary)">Coeur:</span> {product.coeur}</p>
-          <p><span className="font-medium text-(--brand-primary)">Fond:</span> {product.fond}</p>
+          <p><span className="font-medium text-(--brand-primary)">Top:</span> {product.tete}</p>
+          <p><span className="font-medium text-(--brand-primary)">Heart:</span> {product.coeur}</p>
+          <p><span className="font-medium text-(--brand-primary)">Base:</span> {product.fond}</p>
         </div>
         <button
           type="button"
@@ -128,7 +128,7 @@ function ProductCard({
           className="mt-2 flex w-full items-center justify-center gap-2 rounded border border-(--brand-primary)/30 bg-(--brand-light) py-2 text-xs font-semibold text-(--brand-primary) transition hover:bg-(--brand-primary)/5"
         >
           <FiShoppingCart className="h-4 w-4" />
-          Ajouter au panier
+          Add to cart
         </button>
       </div>
     </div>
@@ -151,12 +151,12 @@ export default function LikesPage() {
         <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           {products.length === 0 ? (
             <p className="text-center text-sm text-(--brand-primary)/70">
-              Aucun produit dans vos favoris pour le moment.
+              No products in your favorites at the moment.
             </p>
           ) : (
             <>
               <p className="mb-6 text-sm text-(--brand-primary)/70">
-                {products.length} article{products.length !== 1 ? "s" : ""} dans vos favoris
+                {products.length} item{products.length !== 1 ? "s" : ""} in your favorites
               </p>
               <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
                 {products.map((product) => (

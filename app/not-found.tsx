@@ -13,17 +13,17 @@ export default function NotFound() {
         </div>
         <div>
           <h1 className="text-2xl sm:text-3xl font-heading font-bold text-(--brand-primary)">
-            Erreur 404
+            Error 404
           </h1>
           <p className="mt-2 text-(--brand-primary)/80">
-            La page que vous cherchez est introuvable ou a été déplacée.
+            The page you are looking for could not be found or has been moved.
           </p>
         </div>
         <Link
           href="/"
           className="inline-flex items-center justify-center gap-2 bg-(--brand-primary) text-(--brand-light) font-semibold px-6 py-3 rounded-full hover:bg-[#4a101a] transition-colors"
         >
-          Retour à l&apos;accueil
+          Back to home
           <FiArrowRight className="h-4 w-4" />
         </Link>
       </div>

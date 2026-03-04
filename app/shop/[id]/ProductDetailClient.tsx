@@ -14,9 +14,9 @@ import {
 } from "@/lib/products";
 
 const dummyReviews = [
-  { author: "Marie D.", rating: 5, date: "15 janv. 2025", text: "Parfum magnifique, livraison rapide. Je recommande !" },
-  { author: "Jean K.", rating: 4, date: "8 janv. 2025", text: "Très satisfait du produit. Emballage soigné." },
-  { author: "Sophie L.", rating: 5, date: "2 janv. 2025", text: "Exactement comme décrit. Parfum authentique." },
+  { author: "Marie D.", rating: 5, date: "Jan 15, 2025", text: "Beautiful perfume, fast delivery. I recommend!" },
+  { author: "Jean K.", rating: 4, date: "Jan 8, 2025", text: "Very satisfied with the product. Careful packaging." },
+  { author: "Sophie L.", rating: 5, date: "Jan 2, 2025", text: "Exactly as described. Authentic perfume." },
 ];
 
 function StarRating({ rating }: { rating: number }) {
@@ -50,11 +50,11 @@ export default function ProductDetailClient({ product }: { product: Product }) {
       {/* Breadcrumbs */}
       <nav className="mb-6 text-sm text-(--brand-primary)/70">
         <Link href="/" className="hover:text-(--brand-primary)">
-          Accueil
+          Home
         </Link>
         <span className="mx-2">/</span>
         <Link href="/shop" className="hover:text-(--brand-primary)">
-          Produits
+          Products
         </Link>
         <span className="mx-2">/</span>
         <span className="text-(--brand-primary)">{categoryLabel}</span>
@@ -86,7 +86,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     : "opacity-70 hover:opacity-100"
                 }`}
               >
-                <Image src={img} alt={`${product.name} vue ${i + 1}`} fill className="object-cover" />
+                <Image src={img} alt={`${product.name} view ${i + 1}`} fill className="object-cover" />
               </button>
             ))}
           </div>
@@ -106,7 +106,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                aria-label="Ajouter aux favoris"
+                aria-label="Add to favorites"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-(--brand-primary)/20 text-(--brand-primary) transition hover:bg-(--brand-primary)/5"
                 onClick={() => setIsLiked(!isLiked)}
               >
@@ -116,7 +116,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               </button>
               <button
                 type="button"
-                aria-label="Partager"
+                aria-label="Share"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-(--brand-primary)/20 text-(--brand-primary) transition hover:bg-(--brand-primary)/5"
               >
                 <FiShare2 className="h-5 w-5" />
@@ -128,7 +128,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           <div className="mt-4 flex items-center gap-2">
             <StarRating rating={product.rating} />
             <span className="text-sm text-(--brand-primary)/70">
-              {product.reviewCount} avis
+              {product.reviewCount} reviews
             </span>
           </div>
 
@@ -138,18 +138,18 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               {formatPriceCFA(product.price)}
             </p>
             <p className="mt-1 text-sm font-medium text-emerald-600">
-              {formatPriceCFA(product.price)} frais de port inclus
+              {formatPriceCFA(product.price)} shipping included
             </p>
           </div>
 
           {/* Specs */}
           <dl className="mt-6 space-y-3 border-t border-(--brand-primary)/10 pt-6">
             <div className="flex justify-between text-sm">
-              <dt className="text-(--brand-primary)/70">Marque</dt>
+              <dt className="text-(--brand-primary)/70">Brand</dt>
               <dd className="font-medium">{product.brand}</dd>
             </div>
             <div className="flex justify-between text-sm">
-              <dt className="text-(--brand-primary)/70">État</dt>
+              <dt className="text-(--brand-primary)/70">Condition</dt>
               <dd className="font-medium">{product.condition}</dd>
             </div>
             <div className="flex justify-between text-sm">
@@ -157,13 +157,13 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               <dd className="font-medium">{product.volume}</dd>
             </div>
             <div className="flex justify-between text-sm">
-              <dt className="text-(--brand-primary)/70">Catégorie</dt>
+              <dt className="text-(--brand-primary)/70">Category</dt>
               <dd className="font-medium">{categoryLabel}</dd>
             </div>
             <div className="flex justify-between text-sm">
               <dt className="text-(--brand-primary)/70">Notes</dt>
               <dd className="font-medium text-gray-800">
-                <span className="text-(--brand-primary)">Tête:</span> {product.tete} · <span className="text-(--brand-primary)">Cœur:</span> {product.coeur} · <span className="text-(--brand-primary)">Fond:</span> {product.fond}
+                <span className="text-(--brand-primary)">Top:</span> {product.tete} · <span className="text-(--brand-primary)">Heart:</span> {product.coeur} · <span className="text-(--brand-primary)">Base:</span> {product.fond}
               </dd>
             </div>
           </dl>
@@ -175,7 +175,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             </h2>
             <p className="mt-2 text-sm text-(--brand-primary)/80 leading-relaxed">
               {product.description ??
-                `${product.fullName} de ${product.brand}. Une fragrance d'exception.`}
+                `${product.fullName} by ${product.brand}. An exceptional fragrance.`}
             </p>
           </div>
 
@@ -184,10 +184,10 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             <FiShield className="h-8 w-8 shrink-0 text-(--brand-primary)" />
             <div className="min-w-0">
               <p className="font-semibold text-(--brand-primary)">
-                Protection acheteur
+                Buyer protection
               </p>
               <p className="mt-0.5 text-sm text-(--brand-primary)/70">
-                Paiement sécurisé et remboursement garanti
+                Secure payment and guaranteed refund
               </p>
             </div>
           </div>
@@ -200,7 +200,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           >
             <span className="flex items-center justify-center gap-2">
               <FiShoppingCart className="h-5 w-5" />
-              Ajouter au panier
+              Add to cart
             </span>
           </button>
         </div>
@@ -209,7 +209,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
       {/* Reviews section */}
       <section className="mt-16 border-t border-(--brand-primary)/10 pt-12">
         <h2 className="text-xl font-bold text-(--brand-primary)">
-          Avis clients
+          Customer reviews
         </h2>
         <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
           <div className="shrink-0 space-y-2">
@@ -220,13 +220,13 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               </span>
             </div>
             <p className="text-sm text-(--brand-primary)/70">
-              {product.reviewCount} avis
+              {product.reviewCount} reviews
             </p>
             <button
               type="button"
               className="rounded-full border border-(--brand-primary)/30 px-4 py-2 text-sm font-medium text-(--brand-primary) transition hover:bg-(--brand-primary)/5"
             >
-              Tous ({product.reviewCount})
+              All ({product.reviewCount})
             </button>
           </div>
           <div className="min-w-0 flex-1 space-y-4">
@@ -251,13 +251,13 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             ))}
             <div className="rounded-lg border border-(--brand-primary)/10 p-8 text-center">
               <p className="text-(--brand-primary)/70">
-                Connecte-toi pour laisser un avis
+                Sign in to leave a review
               </p>
               <Link
                 href="/login"
                 className="mt-4 inline-block rounded-full bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
               >
-                Se connecter
+                Sign in
               </Link>
             </div>
           </div>
@@ -267,7 +267,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
       {/* Similar products */}
       <section className="mt-12 border-t border-(--brand-primary)/10 pt-8 sm:mt-16 sm:pt-12">
         <h2 className="text-xl font-bold text-(--brand-primary)">
-          Articles similaires
+          Similar products
         </h2>
         {similarProducts.length > 0 ? (
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -298,7 +298,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           </div>
         ) : (
           <p className="mt-4 text-sm text-(--brand-primary)/60">
-            Aucun article similaire pour le moment
+            No similar products at the moment
           </p>
         )}
       </section>

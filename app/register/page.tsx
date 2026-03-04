@@ -12,17 +12,17 @@ export default function RegisterPage() {
 
   return (
     <AuthLayout
-      title="Rejoignez-nous"
-      subtitle="Créez un compte pour sauvegarder vos favoris, passer commande et profiter de nos offres exclusives."
-      backLabel="Retour à la connexion"
+      title="Join us"
+      subtitle="Create an account to save your favorites, place orders and enjoy our exclusive offers."
+      backLabel="Back to login"
       backHref="/login"
     >
       <div className="rounded-lg p-8">
         <h2 className="text-xl font-semibold text-(--brand-primary)">
-          Inscription
+          Sign up
         </h2>
         <p className="mt-1 text-sm text-(--brand-primary)/70">
-          Remplissez le formulaire pour créer votre compte
+          Fill in the form to create your account
         </p>
 
         <form className="mt-6 space-y-4" onSubmit={(e) => e.preventDefault()}>
@@ -31,14 +31,14 @@ export default function RegisterPage() {
               htmlFor="name"
               className="block text-sm font-medium text-(--brand-primary)"
             >
-              Nom complet
+              Full name
             </label>
             <input
               id="name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Jean Dupont"
+              placeholder="John Doe"
               className="mt-1 w-full rounded border border-(--brand-primary)/20 bg-white px-3 py-2.5 text-sm text-(--brand-primary) placeholder:text-(--brand-primary)/40 focus:border-(--brand-primary) focus:outline-none focus:ring-1 focus:ring-(--brand-primary)"
               required
             />
@@ -55,7 +55,7 @@ export default function RegisterPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="vous@exemple.com"
+              placeholder="you@example.com"
               className="mt-1 w-full rounded border border-(--brand-primary)/20 bg-white px-3 py-2.5 text-sm text-(--brand-primary) placeholder:text-(--brand-primary)/40 focus:border-(--brand-primary) focus:outline-none focus:ring-1 focus:ring-(--brand-primary)"
               required
             />
@@ -65,7 +65,7 @@ export default function RegisterPage() {
               htmlFor="password"
               className="block text-sm font-medium text-(--brand-primary)"
             >
-              Mot de passe
+              Password
             </label>
             <input
               id="password"
@@ -82,7 +82,7 @@ export default function RegisterPage() {
               htmlFor="confirmPassword"
               className="block text-sm font-medium text-(--brand-primary)"
             >
-              Confirmer le mot de passe
+              Confirm password
             </label>
             <input
               id="confirmPassword"
@@ -101,13 +101,13 @@ export default function RegisterPage() {
               required
             />
             <span className="text-(--brand-primary)/80">
-              J&apos;accepte les{" "}
+              I accept the{" "}
               <Link href="#" className="text-(--brand-primary) hover:underline">
-                conditions générales
+                terms and conditions
               </Link>{" "}
-              et la{" "}
+              and the{" "}
               <Link href="#" className="text-(--brand-primary) hover:underline">
-                politique de confidentialité
+                privacy policy
               </Link>
             </span>
           </label>
@@ -115,14 +115,14 @@ export default function RegisterPage() {
             type="submit"
             className="w-full rounded bg-(--brand-primary) py-2.5 text-sm font-semibold text-(--brand-light) transition hover:bg-[#4a101a]"
           >
-            S&apos;inscrire
+            Sign up
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-(--brand-primary)/70">
-          Déjà un compte ?{" "}
+          Already have an account?{" "}
           <Link href="/login" className="font-medium text-(--brand-primary) hover:underline">
-            Se connecter
+            Sign in
           </Link>
         </p>
       </div>

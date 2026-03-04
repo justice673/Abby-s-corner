@@ -74,25 +74,25 @@ export default function DiscountSection() {
 
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center justify-center gap-8 px-4 py-16 text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/90">
-          Offre limitée
+          Limited offer
         </p>
         <h2 className="max-w-2xl text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl font-heading">
-          Jusqu&apos;à <span className="text-amber-300">-25%</span> sur une
-          sélection de parfums
+          Up to <span className="text-amber-300">-25%</span> on a
+          selection of perfumes
         </h2>
         <p className="max-w-md text-sm text-white/85 sm:text-base">
-          Profitez de nos offres exclusives. L&apos;offre se termine bientôt.
+          Enjoy our exclusive offers. The offer ends soon.
         </p>
 
         {/* Glass timer - each unit in its own glass div, no border radius */}
         {timeLeft.expired ? (
           <p className="text-lg font-semibold text-white">
-            L&apos;offre est terminée
+            The offer has ended
           </p>
         ) : (
           <div className="flex items-stretch gap-2 sm:gap-3">
-            <GlassTimerUnit value={timeLeft.days} label="Jours" />
-            <GlassTimerUnit value={timeLeft.hours} label="Heures" />
+            <GlassTimerUnit value={timeLeft.days} label="Days" />
+            <GlassTimerUnit value={timeLeft.hours} label="Hours" />
             <GlassTimerUnit value={timeLeft.minutes} label="Min" />
             <GlassTimerUnit value={timeLeft.seconds} label="Sec" />
           </div>
@@ -102,7 +102,7 @@ export default function DiscountSection() {
           href="#collections"
           className="rounded-full bg-white px-8 py-3 text-sm font-semibold text-(--brand-primary) transition hover:bg-white/95"
         >
-          Voir les offres
+          View offers
         </a>
       </div>
     </section>

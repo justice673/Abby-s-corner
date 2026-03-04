@@ -10,17 +10,17 @@ export default function LoginPage() {
 
   return (
     <AuthLayout
-      title="Bienvenue"
-      subtitle="Connectez-vous à votre compte pour accéder à vos favoris, votre panier et vos commandes."
-      backLabel="Retour à l'accueil"
+      title="Welcome"
+      subtitle="Sign in to your account to access your favorites, cart and orders."
+      backLabel="Back to home"
       backHref="/"
     >
       <div className="rounded-lg p-8">
         <h2 className="text-xl font-semibold text-(--brand-primary)">
-          Connexion
+          Sign in
         </h2>
         <p className="mt-1 text-sm text-(--brand-primary)/70">
-          Entrez vos identifiants pour vous connecter
+          Enter your credentials to sign in
         </p>
 
         <form className="mt-6 space-y-4" onSubmit={(e) => e.preventDefault()}>
@@ -65,14 +65,14 @@ export default function LoginPage() {
                 className="h-4 w-4 rounded border-(--brand-primary)/30 text-(--brand-primary)"
               />
               <span className="text-(--brand-primary)/80">
-                Se souvenir de moi
+                Remember me
               </span>
             </label>
             <Link
               href="/forgot-password"
               className="text-(--brand-primary) hover:underline"
             >
-              Mot de passe oublié ?
+              Forgot password?
             </Link>
           </div>
           <button
@@ -84,9 +84,9 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-(--brand-primary)/70">
-          Pas encore de compte ?{" "}
+          Don't have an account yet?{" "}
           <Link href="/register" className="font-medium text-(--brand-primary) hover:underline">
-            S&apos;inscrire
+            Sign up
           </Link>
         </p>
       </div>

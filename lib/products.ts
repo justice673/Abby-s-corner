@@ -1,9 +1,9 @@
 export const categoryLabels: Record<string, string> = {
-  femme: "Parfums féminins",
-  homme: "Parfums masculins",
-  unisexe: "Unisexes",
-  maison: "Maison & bien-être",
-  coffrets: "Coffrets",
+  femme: "Women's perfumes",
+  homme: "Men's perfumes",
+  unisexe: "Unisex",
+  maison: "Home & wellness",
+  coffrets: "Gift sets",
 };
 
 export type Product = {
@@ -47,7 +47,7 @@ export const products: Product[] = [
     fullName: "TERRE D'HERMÈS - EAU DE PARFUM",
     brand: "HERMÈS",
     tags: ["Boisé", "Épicé"],
-    condition: "Très bon état",
+    condition: "Very good condition",
     category: "homme",
     price: 55800,
     tete: "Pamplemousse",
@@ -60,7 +60,7 @@ export const products: Product[] = [
     rating: 4.8,
     reviewCount: 24,
     description:
-      "Terre d'Hermès est un parfum bois épicé qui évoque un voyage à travers les terres. Une fragrance intense et sophistiquée.",
+      "Terre d'Hermès is a woody spicy perfume that evokes a journey through the lands. An intense and sophisticated fragrance.",
   },
   {
     id: "2",
@@ -68,7 +68,7 @@ export const products: Product[] = [
     fullName: "BLACK ORCHID - EAU DE PARFUM",
     brand: "TOM FORD",
     tags: ["Oriental", "Fleuri"],
-    condition: "Neuf avec étiquette",
+    condition: "New with tag",
     category: "femme",
     price: 78720,
     tete: "Truffe noire",
@@ -81,7 +81,7 @@ export const products: Product[] = [
     rating: 4.9,
     reviewCount: 42,
     description:
-      "Black Orchid est une fragrance sensuelle et mystérieuse, alliant des notes florales sombres à des accords orientaux.",
+      "Black Orchid is a sensual and mysterious fragrance, combining dark floral notes with oriental accords.",
   },
   {
     id: "3",
@@ -89,7 +89,7 @@ export const products: Product[] = [
     fullName: "N°5 - EAU DE PARFUM",
     brand: "CHANEL",
     tags: ["Fleuri", "Aldéhydé"],
-    condition: "Neuf avec étiquette",
+    condition: "New with tag",
     category: "femme",
     price: 62320,
     tete: "Aldéhydes",
@@ -102,7 +102,7 @@ export const products: Product[] = [
     rating: 4.7,
     reviewCount: 36,
     description:
-      "Le N°5 de Chanel, icône intemporelle de la parfumerie féminine. Une composition florale aldéhydée d'une élégance rare.",
+      "Chanel N°5, a timeless icon of women's perfumery. An aldehydic floral composition of rare elegance.",
   },
   {
     id: "4",
@@ -110,7 +110,7 @@ export const products: Product[] = [
     fullName: "SAUVAGE - EAU DE TOILETTE",
     brand: "DIOR",
     tags: ["Boisé", "Frais"],
-    condition: "Très bon état",
+    condition: "Very good condition",
     category: "homme",
     price: 51168,
     tete: "Bergamote",
@@ -123,7 +123,7 @@ export const products: Product[] = [
     rating: 4.6,
     reviewCount: 19,
     description:
-      "Sauvage de Dior, une fragrance fraîche et épicée qui incarne la liberté et l'aventure.",
+      "Dior Sauvage, a fresh and spicy fragrance that embodies freedom and adventure.",
   },
   {
     id: "5",
@@ -131,7 +131,7 @@ export const products: Product[] = [
     fullName: "WOOD SAGE & SEA SALT - EAU DE COLOGNE",
     brand: "JO MALONE",
     tags: ["Frais", "Aromatique"],
-    condition: "Neuf avec étiquette",
+    condition: "New with tag",
     category: "unisexe",
     price: 40672,
     tete: "Feuilles de sauge",
@@ -144,7 +144,7 @@ export const products: Product[] = [
     rating: 4.5,
     reviewCount: 12,
     description:
-      "Une fragrance fraîche et aromatique qui évoque les promenades en bord de mer.",
+      "A fresh and aromatic fragrance that evokes seaside walks.",
   },
   {
     id: "6",
@@ -152,7 +152,7 @@ export const products: Product[] = [
     fullName: "GYPSY WATER - EAU DE PARFUM",
     brand: "BYREDO",
     tags: ["Boisé", "Ambré"],
-    condition: "Très bon état",
+    condition: "Very good condition",
     category: "unisexe",
     price: 88560,
     tete: "Citron",
@@ -165,7 +165,7 @@ export const products: Product[] = [
     rating: 4.8,
     reviewCount: 34,
     description:
-      "Gypsy Water capture l'esprit nomade avec des notes boisées, ambrées et une touche de vanille.",
+      "Gypsy Water captures the nomadic spirit with woody, amber notes and a touch of vanilla.",
   },
   {
     id: "7",
@@ -173,7 +173,7 @@ export const products: Product[] = [
     fullName: "SANTAL 33 - EAU DE PARFUM",
     brand: "LE LABO",
     tags: ["Boisé", "Cuir"],
-    condition: "Neuf avec étiquette",
+    condition: "New with tag",
     category: "unisexe",
     price: 108240,
     tete: "Cardamome",
@@ -186,7 +186,7 @@ export const products: Product[] = [
     rating: 4.9,
     reviewCount: 28,
     description:
-      "Santal 33, une fragrance iconique aux notes de santal, cuir et cardamome.",
+      "Santal 33, an iconic fragrance with notes of sandalwood, leather and cardamom.",
   },
   {
     id: "8",
@@ -194,7 +194,7 @@ export const products: Product[] = [
     fullName: "AVENTUS - EAU DE PARFUM",
     brand: "CREED",
     tags: ["Boisé", "Fruité"],
-    condition: "Très bon état",
+    condition: "Very good condition",
     category: "homme",
     price: 144320,
     tete: "Ananas",
@@ -207,7 +207,7 @@ export const products: Product[] = [
     rating: 4.9,
     reviewCount: 41,
     description:
-      "Aventus de Creed, une fragrance légendaire aux notes fruitées et boisées.",
+      "Creed Aventus, a legendary fragrance with fruity and woody notes.",
   },
 ];
 

@@ -14,79 +14,79 @@ import {
 } from "react-icons/fi";
 
 const navLinks = [
-  { href: "#marques", label: "Marques", key: "marques" },
-  { href: "#parfums", label: "Parfums" },
+  { href: "#marques", label: "Brands", key: "marques" },
+  { href: "#parfums", label: "Perfumes" },
   {
     href: "#maison-bien-etre",
-    label: "Maison & bien etre",
+    label: "Home & wellness",
     key: "maison",
   },
-  { href: "#familles-olfactives", label: "Familles olfactives" },
-  { href: "#box-sillage", label: "Box Sillage" },
-  { href: "#coffrets", label: "Coffrets" },
-  { href: "#offres-exclusives", label: "🎁 Offres Exclusives" },
+  { href: "#familles-olfactives", label: "Olfactory families" },
+  { href: "#box-sillage", label: "Abby&apos;s Box" },
+  { href: "#coffrets", label: "Gift sets" },
+  { href: "#offres-exclusives", label: "🎁 Exclusive Offers" },
   { href: "#contact", label: "Contact" },
 ];
 
 const marquesItems = [
   {
     id: "toutes-marques",
-    label: "Toutes marques",
+    label: "All brands",
     description:
-      "Explorez l’ensemble de nos maisons de parfums, des plus iconiques aux nouvelles signatures confidentielles.",
+      "Explore our full range of perfume houses, from the most iconic to new confidential signatures.",
     image: "/images/dropdown-1.webp",
-    buttonText: "Découvrir toutes les marques",
+    buttonText: "Discover all brands",
   },
   {
     id: "nouvelles-marques",
-    label: "Nouvelles marques",
+    label: "New brands",
     description:
-      "De nouvelles maisons viennent enrichir notre sélection, choisies pour leur exigence et leur créativité.",
+      "New houses join our selection, chosen for their excellence and creativity.",
     image: "/images/dropdown-2.jpg",
-    buttonText: "Voir les nouveautés",
+    buttonText: "See what's new",
   },
   {
     id: "coups-de-coeur",
-    label: "Coups de cœur",
+    label: "Favorites",
     description:
-      "Une sélection resserrée de maisons chouchous, plébiscitées par nos clients les plus fidèles.",
+      "A curated selection of beloved houses, highly rated by our most loyal customers.",
     image: "/images/dropdown-3.webp",
-    buttonText: "Découvrir la sélection",
+    buttonText: "Discover the selection",
   },
 ];
 
 const maisonItems = [
   {
     id: "cheveux",
-    label: "Parfums pour cheveux",
+    label: "Hair perfumes",
     description:
-      "Des brumes délicates qui parfument la chevelure sans l’alourdir, pour un sillage subtil à chaque mouvement.",
+      "Delicate mists that fragrance your hair without weighing it down, for a subtle trail with every movement.",
     image: "/images/dropdown-4.webp",
-    buttonText: "Découvrir les brumes",
+    buttonText: "Discover the mists",
   },
   {
     id: "bougies",
-    label: "Bougies",
+    label: "Candles",
     description:
-      "Créez une atmosphère chaleureuse avec nos bougies parfumées, inspirées de vos accords préférés.",
+      "Create a warm atmosphere with our scented candles, inspired by your favorite accords.",
     image: "/images/dropdown-1.webp",
-    buttonText: "Voir les bougies",
+    buttonText: "View candles",
   },
   {
     id: "ambiance",
-    label: "Parfums d’ambiance",
+    label: "Home fragrances",
     description:
-      "Diffuseurs, sprays et rituels d’intérieur pour parfumer chaque pièce avec élégance.",
+      "Diffusers, sprays and home rituals to fragrance every room with elegance.",
     image: "/images/dropdown-3.webp",
-    buttonText: "Parfumer la maison",
+    buttonText: "Fragrance your home",
   },
   {
     id: "corps",
-    label: "Soin du corps",
+    label: "Body care",
     description:
-      "Laits, huiles et rituels pour prolonger votre parfum sur la peau et sublimer le geste.",
+      "Lotions, oils and rituals to extend your perfume on skin and elevate the gesture.",
     image: "/images/dropdown-2.jpg",
-    buttonText: "Voir les soins",
+    buttonText: "View body care",
   },
 ];
 
@@ -108,11 +108,11 @@ export default function Navbar() {
       <nav className="relative mx-auto max-w-6xl px-4 py-2 md:px-6 lg:px-8">
         {/* Top bar: logo + icons */}
         <div className="flex items-center justify-between gap-4 py-1">
-          <a href="#" className="flex items-center gap-3">
-            <div className="relative h-9 w-32 sm:h-10 sm:w-40">
+          <a href="/" className="flex items-center gap-3">
+            <div className="relative h-9 w-38 sm:h-10 sm:w-40">
               <Image
-                src="/images/logo_sillage_parfumerie.svg"
-                alt="Sillage Parfumerie logo"
+                src="/images/logo.png"
+                alt="Abby's Corner logo"
                 fill
                 className="object-contain text-(--brand-primary)"
                 priority
@@ -123,14 +123,14 @@ export default function Navbar() {
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/likes"
-              aria-label="Favoris"
+              aria-label="Favorites"
               className="rounded-full border border-(--brand-primary)/15 p-2 text-(--brand-primary) transition hover:border-(--brand-primary)/40 hover:bg-white"
             >
               <FiHeart className="h-4 w-4" />
             </Link>
             <button
               type="button"
-              aria-label="Panier"
+              aria-label="Cart"
               onClick={openCart}
               className="relative rounded-full border border-(--brand-primary)/15 p-2 text-(--brand-primary) transition hover:border-(--brand-primary)/40 hover:bg-white"
             >
@@ -143,7 +143,7 @@ export default function Navbar() {
             </button>
             <Link
               href="/login"
-              aria-label="Mon compte"
+              aria-label="My account"
               className="rounded-full border border-(--brand-primary)/15 p-2 text-(--brand-primary) transition hover:border-(--brand-primary)/40 hover:bg-white"
             >
               <FiUser className="h-4 w-4" />

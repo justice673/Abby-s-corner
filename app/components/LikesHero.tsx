@@ -15,13 +15,13 @@ export default function LikesHero() {
       {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-[320px] w-full max-w-6xl flex-col items-center justify-center px-4 py-16 text-center sm:px-6 lg:px-8">
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-(--brand-light)/80">
-          Sillage Parfumerie
+          Abby's Corner
         </p>
         <h1 className="mt-4 max-w-2xl text-3xl font-semibold tracking-wide text-white sm:text-4xl md:text-5xl font-heading">
-          Mes favoris
+          My favorites
         </h1>
         <p className="mt-4 max-w-xl text-sm leading-relaxed text-(--brand-light)/90 sm:text-base">
-          Vos coups de cœur et parfums sauvegardés
+          Your favorite perfumes and saved items
         </p>
       </div>
     </section>

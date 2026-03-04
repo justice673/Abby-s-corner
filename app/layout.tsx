@@ -45,8 +45,8 @@ const bodyFont = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Sillage Parfumerie",
-  description: "Eaux de parfum and scent rituals by Sillage Parfumerie.",
+  title: "Abby's Corner",
+  description: "Perfumes and scent rituals by Abby's Corner.",
 };
 
 export default function RootLayout({

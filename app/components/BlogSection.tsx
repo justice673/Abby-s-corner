@@ -3,92 +3,92 @@ import { FiSearch } from "react-icons/fi";
 const recentPosts = [
   {
     id: "1",
-    title: "Comment choisir son parfum selon sa personnalité",
-    date: "15 mars 2025",
+    title: "How to choose your perfume based on your personality",
+    date: "March 15, 2025",
     image: "/images/new-arrivals-1.jpg",
   },
   {
     id: "2",
-    title: "Les familles olfactives expliquées",
-    date: "8 mars 2025",
+    title: "Olfactory families explained",
+    date: "March 8, 2025",
     image: "/images/new-arrivals-2.webp",
   },
   {
     id: "3",
-    title: "Rituels de parfum pour le printemps",
-    date: "1 mars 2025",
+    title: "Perfume rituals for spring",
+    date: "March 1, 2025",
     image: "/images/dropdown-4.webp",
   },
 ];
 
-const archives = ["Mars 2025", "Février 2025", "Janvier 2025"];
+const archives = ["March 2025", "February 2025", "January 2025"];
 
 const categories = [
-  { name: "Parfums féminins", count: 8 },
-  { name: "Parfums masculins", count: 6 },
-  { name: "Conseils & astuces", count: 12 },
-  { name: "Nouvelles marques", count: 4 },
+  { name: "Women's perfumes", count: 8 },
+  { name: "Men's perfumes", count: 6 },
+  { name: "Tips & tricks", count: 12 },
+  { name: "New brands", count: 4 },
 ];
 
 const blogPosts = [
   {
     id: "1",
-    title: "Comment conserver votre parfum pour qu'il dure plus longtemps",
+    title: "How to store your perfume so it lasts longer",
     excerpt:
-      "Découvrez les meilleures pratiques pour préserver la qualité et l'intensité de vos fragrances au fil du temps.",
-    tag: "Conseils",
-    date: "15 mars 2025",
+      "Discover the best practices to preserve the quality and intensity of your fragrances over time.",
+    tag: "Tips",
+    date: "March 15, 2025",
     comments: 5,
     image: "/images/product-1.jpg",
   },
   {
     id: "2",
-    title: "Les notes de tête, de cœur et de fond : comprendre la pyramide olfactive",
+    title: "Top, heart and base notes: understanding the olfactory pyramid",
     excerpt:
-      "Une introduction aux trois phases d'un parfum et comment elles évoluent sur votre peau tout au long de la journée.",
+      "An introduction to the three phases of a perfume and how they evolve on your skin throughout the day.",
     tag: "Guide",
-    date: "12 mars 2025",
+    date: "March 12, 2025",
     comments: 8,
     image:
       "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=600&q=80",
   },
   {
     id: "3",
-    title: "Top 5 des parfums pour l'été 2025",
+    title: "Top 5 perfumes for summer 2025",
     excerpt:
-      "Notre sélection de fragrances fraîches et légères, parfaites pour les journées ensoleillées.",
-    tag: "Sélection",
-    date: "8 mars 2025",
+      "Our selection of fresh, light fragrances, perfect for sunny days.",
+    tag: "Selection",
+    date: "March 8, 2025",
     comments: 12,
     image: "/images/blog-top5.png",
   },
   {
     id: "4",
-    title: "L'histoire du parfum : des civilisations anciennes à nos jours",
+    title: "The history of perfume: from ancient civilizations to today",
     excerpt:
-      "Un voyage à travers les âges pour comprendre comment le parfum a façonné les cultures et les sociétés.",
-    tag: "Histoire",
-    date: "5 mars 2025",
+      "A journey through the ages to understand how perfume has shaped cultures and societies.",
+    tag: "History",
+    date: "March 5, 2025",
     comments: 3,
     image: "/images/product-2.jpg",
   },
   {
     id: "5",
-    title: "Comment appliquer son parfum pour un sillage optimal",
+    title: "How to apply perfume for optimal sillage",
     excerpt:
-      "Les points de pulsation, la quantité idéale et les erreurs à éviter pour une diffusion parfaite.",
-    tag: "Conseils",
-    date: "1 mars 2025",
+      "Pulse points, the ideal amount and mistakes to avoid for perfect diffusion.",
+    tag: "Tips",
+    date: "March 1, 2025",
     comments: 7,
     image: "/images/product-3.png",
   },
   {
     id: "6",
-    title: "Parfums unisexes : la tendance qui séduit",
+    title: "Unisex perfumes: the trend that's winning over",
     excerpt:
-      "Pourquoi les fragrances sans genre gagnent en popularité et lesquelles découvrir en priorité.",
-    tag: "Tendances",
-    date: "28 février 2025",
+      "Why gender-neutral fragrances are gaining popularity and which ones to discover first.",
+    tag: "Trends",
+    date: "February 28, 2025",
     comments: 4,
     image: "/images/login.webp",
   },
@@ -98,7 +98,7 @@ export default function BlogSection() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
       <h2 className="mb-10 text-2xl font-bold uppercase tracking-wide text-(--brand-primary)">
-        Notre blog
+        Our blog
       </h2>
 
       <div className="flex flex-col gap-8 lg:flex-row">
@@ -108,7 +108,7 @@ export default function BlogSection() {
             {/* Recent Posts */}
             <div>
               <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-(--brand-primary)">
-                Articles récents
+                Recent posts
               </h3>
               <ul className="space-y-3">
                 {recentPosts.map((post) => (
@@ -160,12 +160,12 @@ export default function BlogSection() {
             {/* Search */}
             <div>
               <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-(--brand-primary)">
-                Recherche
+                Search
               </h3>
               <div className="relative">
                 <input
                   type="search"
-                  placeholder="Rechercher..."
+                  placeholder="Search..."
                   className="w-full rounded border border-(--brand-primary)/30 bg-white py-2.5 pl-3 pr-10 text-sm text-(--brand-primary) placeholder:text-(--brand-primary)/50 focus:border-(--brand-primary) focus:outline-none focus:ring-1 focus:ring-(--brand-primary)"
                 />
                 <FiSearch className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--brand-primary)/60" />
@@ -175,7 +175,7 @@ export default function BlogSection() {
             {/* Categories */}
             <div>
               <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-(--brand-primary)">
-                Catégories
+                Categories
               </h3>
               <ul className="space-y-2">
                 {categories.map((cat) => (
@@ -233,11 +233,11 @@ export default function BlogSection() {
                     href="#"
                     className="mt-3 inline-flex text-xs font-semibold uppercase tracking-wider text-(--brand-primary) underline transition-opacity hover:opacity-80"
                   >
-                    Lire la suite »
+                    Read more »
                   </a>
                   <div className="mt-auto flex gap-4 pt-4 text-xs text-(--brand-primary)/60">
                     <span>{post.date}</span>
-                    <span>{post.comments} commentaires</span>
+                    <span>{post.comments} comments</span>
                   </div>
                 </div>
               </article>

@@ -8,8 +8,11 @@ export default function ScrollToTop() {
 
   useEffect(() => {
     const checkScroll = () => {
+      if (typeof window === "undefined") return;
       const halfHeight = document.documentElement.scrollHeight / 2;
-      setIsVisible(typeof window !== "undefined" && window.scrollY > halfHeight);
+      const visible = window.scrollY > halfHeight;
+      // Defer to avoid state update before component is fully mounted
+      requestAnimationFrame(() => setIsVisible(visible));
     };
 
     checkScroll();
@@ -27,7 +30,7 @@ export default function ScrollToTop() {
     <button
       type="button"
       onClick={scrollToTop}
-      aria-label="Retour en haut"
+      aria-label="Back to top"
       className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-(--brand-primary) text-(--brand-light) shadow-lg transition hover:bg-[#4a101a] hover:scale-110"
     >
       <FiChevronUp className="h-6 w-6" />

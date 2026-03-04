@@ -5,28 +5,28 @@ const HERO_IMAGE = "/images/store-hero.jpg";
 const stores = [
   {
     id: "1",
-    name: "Sillage Parfumerie",
-    address: "17 route des Almadies, en face Casino",
-    phone: "338683517 - 781757373",
+    name: "Abby's Corner",
+    address: "Douala, Cameroon",
+    phone: "+237 670-123-456",
     href: "#",
     image: "/images/store-1.webp",
   },
-  {
-    id: "2",
-    name: "Sillage Mandela",
-    address: "12, Av Nelson Mandela, en face Hôpital Principal",
-    phone: "338425555 - 781300404",
-    href: "#",
-    image: "/images/store-2.webp",
-  },
-  {
-    id: "3",
-    name: "La gondole",
-    address: "Sea Plaza, 1er étage à gauche",
-    phone: "338646363 - 770991292",
-    href: "#",
-    image: "/images/store-3.webp",
-  },
+  // {
+  //   id: "2",
+  //   name: "Sillage Mandela",
+  //   address: "12, Av Nelson Mandela, en face Hôpital Principal",
+  //   phone: "338425555 - 781300404",
+  //   href: "#",
+  //   image: "/images/store-2.webp",
+  // },
+  // {
+  //   id: "3",
+  //   name: "La gondole",
+  //   address: "Sea Plaza, 1st floor on the left",
+  //   phone: "338646363 - 770991292",
+  //   href: "#",
+  //   image: "/images/store-3.webp",
+  // },
 ];
 
 export default function StoreSection() {
@@ -47,10 +47,10 @@ export default function StoreSection() {
         {/* Hero title */}
         <div className="text-center">
           <h2 className="text-3xl font-semibold tracking-wide text-white drop-shadow-md sm:text-4xl md:text-5xl font-heading">
-            Notre magasin
+            Our store
           </h2>
           <p className="mt-4 text-sm font-medium tracking-[0.2em] text-white/90 sm:text-base">
-            Découvrez nos boutiques
+            Discover our stores
           </p>
         </div>
 

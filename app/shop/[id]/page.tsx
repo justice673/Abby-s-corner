@@ -16,12 +16,12 @@ export default function ProductDetailPage({
       <div className="min-h-screen bg-(--brand-light) text-(--brand-primary)">
         <Navbar />
         <main className="mx-auto max-w-7xl px-4 py-16 text-center">
-          <h1 className="text-xl font-semibold">Produit introuvable</h1>
+          <h1 className="text-xl font-semibold">Product not found</h1>
           <a
             href="/shop"
             className="mt-4 inline-block text-(--brand-primary) hover:underline"
           >
-            Retour à la boutique
+            Back to store
           </a>
         </main>
       </div>

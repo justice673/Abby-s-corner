@@ -9,27 +9,27 @@ import { formatPriceCFA } from "@/lib/utils";
 import { products } from "@/lib/products";
 
 const categories = [
-  { id: "femme", label: "Parfums féminins" },
-  { id: "homme", label: "Parfums masculins" },
-  { id: "unisexe", label: "Unisexes" },
-  { id: "maison", label: "Maison & bien-être" },
-  { id: "coffrets", label: "Coffrets" },
+  { id: "femme", label: "Women's perfumes" },
+  { id: "homme", label: "Men's perfumes" },
+  { id: "unisexe", label: "Unisex" },
+  { id: "maison", label: "Home & wellness" },
+  { id: "coffrets", label: "Gift sets" },
 ];
 
 const conditions = [
-  { id: "neuf-etiquette", label: "Neuf avec étiquette" },
-  { id: "neuf-sans", label: "Neuf sans étiquette" },
-  { id: "tres-bon", label: "Très bon état" },
-  { id: "bon", label: "Bon état" },
-  { id: "satisfaisant", label: "Satisfaisant" },
+  { id: "neuf-etiquette", label: "New with tag" },
+  { id: "neuf-sans", label: "New without tag" },
+  { id: "tres-bon", label: "Very good condition" },
+  { id: "bon", label: "Good condition" },
+  { id: "satisfaisant", label: "Satisfactory" },
 ];
 
 const volumes = ["30 ml", "50 ml", "100 ml", "150 ml", "200 ml"];
 
 const sortOptions = [
-  { value: "recent", label: "Plus récent" },
-  { value: "price-asc", label: "Prix croissant" },
-  { value: "price-desc", label: "Prix décroissant" },
+  { value: "recent", label: "Most recent" },
+  { value: "price-asc", label: "Price: low to high" },
+  { value: "price-desc", label: "Price: high to low" },
 ];
 
 function ProductCard({
@@ -61,7 +61,7 @@ function ProductCard({
             e.preventDefault();
             onLike();
           }}
-          aria-label="Ajouter aux favoris"
+          aria-label="Add to favorites"
           className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-(--brand-primary) shadow-sm opacity-0 transition-opacity duration-200 group-hover:opacity-100 hover:bg-white"
         >
           <FiHeart
@@ -69,7 +69,7 @@ function ProductCard({
           />
         </button>
         <span className="absolute bottom-2 right-2 bg-white rounded-full border-2 border-emerald-500 px-2.5 py-1 text-xs font-semibold text-emerald-600">
-          {product.stockLeft} restant{product.stockLeft > 1 ? "s" : ""}
+          {product.stockLeft} left
         </span>
       </div>
       <div className="flex flex-col gap-2 p-2.5 sm:p-3">
@@ -93,9 +93,9 @@ function ProductCard({
           {formatPriceCFA(product.price)}
         </p>
         <div className="space-y-0.5 text-xs text-gray-800">
-          <p><span className="font-medium text-(--brand-primary)">Tête:</span> {product.tete}</p>
-          <p><span className="font-medium text-(--brand-primary)">Coeur:</span> {product.coeur}</p>
-          <p><span className="font-medium text-(--brand-primary)">Fond:</span> {product.fond}</p>
+          <p><span className="font-medium text-(--brand-primary)">Top:</span> {product.tete}</p>
+          <p><span className="font-medium text-(--brand-primary)">Heart:</span> {product.coeur}</p>
+          <p><span className="font-medium text-(--brand-primary)">Base:</span> {product.fond}</p>
         </div>
         <button
           type="button"
@@ -107,7 +107,7 @@ function ProductCard({
           className="mt-2 flex w-full items-center justify-center gap-2 rounded border border-(--brand-primary)/30 bg-(--brand-light) py-2 text-xs font-semibold text-(--brand-primary) transition hover:bg-(--brand-primary)/5 sm:mt-3"
         >
           <FiShoppingCart className="h-4 w-4" />
-          Ajouter au panier
+          Add to cart
         </button>
       </div>
     </Link>
@@ -143,10 +143,10 @@ export default function ShopPage() {
   const filteredProducts = products.filter((p) => {
     if (categoryFilters.size && !categoryFilters.has(p.category)) return false;
     if (conditionFilters.size) {
-      const condId = p.condition === "Neuf avec étiquette" ? "neuf-etiquette" :
-        p.condition === "Neuf sans étiquette" ? "neuf-sans" :
-        p.condition === "Très bon état" ? "tres-bon" :
-        p.condition === "Bon état" ? "bon" : "satisfaisant";
+      const condId = p.condition === "New with tag" ? "neuf-etiquette" :
+        p.condition === "New without tag" ? "neuf-sans" :
+        p.condition === "Very good condition" ? "tres-bon" :
+        p.condition === "Good condition" ? "bon" : "satisfaisant";
       if (!conditionFilters.has(condId)) return false;
     }
     if (volumeFilters.size && !volumeFilters.has(p.volume)) return false;
@@ -166,10 +166,10 @@ export default function ShopPage() {
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm text-(--brand-primary)/70">
           <Link href="/" className="hover:text-(--brand-primary)">
-            Accueil
+            Home
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-(--brand-primary)">Produits</span>
+          <span className="text-(--brand-primary)">Products</span>
         </nav>
 
         <div className="flex flex-col gap-8 lg:flex-row">
@@ -178,7 +178,7 @@ export default function ShopPage() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-bold text-(--brand-primary)">
-                  Filtres
+                  Filters
                 </h2>
                 <button
                   type="button"
@@ -186,14 +186,14 @@ export default function ShopPage() {
                   className="flex items-center gap-1.5 text-sm font-medium text-(--brand-primary) hover:underline"
                 >
                   <FiRefreshCw className="h-4 w-4" />
-                  Réinitialiser les filtres
+                  Reset filters
                 </button>
               </div>
 
-              {/* Catégories */}
+              {/* Categories */}
               <div>
                 <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-(--brand-primary)">
-                  Catégories
+                  Categories
                 </h3>
                 <ul className="space-y-2">
                   {categories.map((cat) => (
@@ -212,10 +212,10 @@ export default function ShopPage() {
                 </ul>
               </div>
 
-              {/* État */}
+              {/* Condition */}
               <div>
                 <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-(--brand-primary)">
-                  État
+                  Condition
                 </h3>
                 <ul className="space-y-2">
                   {conditions.map((cond) => (
@@ -260,7 +260,7 @@ export default function ShopPage() {
               {/* Prix */}
               <div>
                 <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-(--brand-primary)">
-                  Prix (FCFA)
+                  Price (FCFA)
                 </h3>
                 <div className="flex gap-2">
                   <input
@@ -282,11 +282,11 @@ export default function ShopPage() {
           <div className="min-w-0 flex-1 lg:w-3/4">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-(--brand-primary)/70">
-                {sortedProducts.length} article{sortedProducts.length !== 1 ? "s" : ""}
+                {sortedProducts.length} item{sortedProducts.length !== 1 ? "s" : ""}
               </p>
               <div className="relative flex items-center gap-2">
                 <span className="text-sm font-medium text-(--brand-primary)">
-                  Trier:
+                  Sort:
                 </span>
                 <select
                   value={sort}

@@ -36,7 +36,7 @@ function ProductCard({
             e.preventDefault();
             onLike();
           }}
-          aria-label="Ajouter aux favoris"
+          aria-label="Add to favorites"
           className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-(--brand-primary) shadow-sm opacity-0 transition-opacity duration-200 group-hover:opacity-100 hover:bg-white"
         >
           <FiHeart
@@ -44,7 +44,7 @@ function ProductCard({
           />
         </button>
         <span className="absolute bottom-2 right-2 bg-white rounded-full border-2 border-emerald-500 px-2.5 py-1 text-xs font-semibold text-emerald-600">
-          {(product.stockLeft ?? 0)} restant{(product.stockLeft ?? 0) > 1 ? "s" : ""}
+          {(product.stockLeft ?? 0)} left
         </span>
       </div>
       <div className="flex flex-col gap-1 p-2 sm:p-2.5">
@@ -70,7 +70,7 @@ function ProductCard({
         </p>
         {/* Scent notes - compact */}
         <p className="line-clamp-2 text-[10px] leading-tight text-gray-800 sm:text-xs">
-          <span className="font-medium text-(--brand-primary)">Tête:</span> {product.tete} · <span className="font-medium text-(--brand-primary)">Coeur:</span> {product.coeur} · <span className="font-medium text-(--brand-primary)">Fond:</span> {product.fond}
+          <span className="font-medium text-(--brand-primary)">Top:</span> {product.tete} · <span className="font-medium text-(--brand-primary)">Heart:</span> {product.coeur} · <span className="font-medium text-(--brand-primary)">Base:</span> {product.fond}
         </p>
         <button
           type="button"
@@ -81,7 +81,7 @@ function ProductCard({
           className="mt-1 flex w-full items-center justify-center gap-1.5 rounded border border-(--brand-primary)/30 bg-(--brand-light) py-1.5 text-[10px] font-semibold text-(--brand-primary) transition hover:bg-(--brand-primary)/5 sm:py-2 sm:text-xs"
         >
           <FiShoppingCart className="h-4 w-4" />
-          Ajouter au panier
+          Add to cart
         </button>
       </div>
     </Link>
@@ -105,10 +105,10 @@ export default function AvailableSection() {
     <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
       <div className="mb-8">
         <h2 className="text-2xl font-bold tracking-tight text-(--brand-primary)">
-          Ce que nous avons
+          What we have
         </h2>
         <p className="mt-1 text-sm text-(--brand-primary)/70">
-          Découvrez notre sélection de parfums et produits disponibles
+          Discover our selection of perfumes and available products
         </p>
       </div>
 

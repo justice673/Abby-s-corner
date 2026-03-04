@@ -22,10 +22,10 @@ export default function CartSheet() {
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
       <SheetContent side="right" className="flex flex-col p-0">
         <SheetHeader className="border-b border-black/5">
-          <SheetTitle>Panier</SheetTitle>
+          <SheetTitle>Cart</SheetTitle>
           {totalItems > 0 && (
             <p className="text-sm text-(--brand-primary)/70">
-              {totalItems} article{totalItems > 1 ? "s" : ""}
+              {totalItems} item{totalItems !== 1 ? "s" : ""}
             </p>
           )}
         </SheetHeader>
@@ -37,7 +37,7 @@ export default function CartSheet() {
                 <EmptyStateLottie />
               </div>
               <p className="text-center text-sm font-medium text-(--brand-primary)/80">
-                Votre panier est vide.
+                Your cart is empty.
               </p>
             </div>
           ) : (
@@ -96,7 +96,7 @@ export default function CartSheet() {
                         <button
                           type="button"
                           onClick={() => removeItem(productId)}
-                          aria-label="Supprimer"
+                          aria-label="Remove"
                           className="rounded-full p-1.5 text-(--brand-primary)/70 transition hover:bg-(--brand-light) hover:text-(--brand-primary)"
                         >
                           <FiTrash2 className="h-4 w-4" />
@@ -121,7 +121,7 @@ export default function CartSheet() {
                 type="button"
                 className="w-full rounded-full bg-(--brand-primary) py-3 font-semibold uppercase tracking-[0.18em] text-(--brand-light) transition hover:bg-[#4a101a]"
               >
-                Commander
+                Checkout
               </button>
             </div>
           </SheetFooter>

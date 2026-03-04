@@ -29,37 +29,37 @@ function CategoryCard({ cat }: { cat: HomeCategory }) {
 
 const categories: HomeCategory[] = [
   {
-    label: "Parfums féminins",
+    label: "Women's perfumes",
     href: "#parfums-femmes",
     area: "a",
     image: "/images/category-1.jpg",
   },
   {
-    label: "Parfums masculins",
+    label: "Men's perfumes",
     href: "#parfums-hommes",
     area: "b",
     image: "/images/category-2.png",
   },
   {
-    label: "Maison & bien-être",
+    label: "Home & wellness",
     href: "#maison-bien-etre",
     area: "c",
     image: "/images/category-3.png",
   },
   {
-    label: "Coffrets cadeaux",
+    label: "Gift sets",
     href: "#coffrets",
     area: "d",
     image: "/images/category-4.jpg",
   },
   {
-    label: "Nouvelles marques",
+    label: "New brands",
     href: "#nouvelles-marques",
     area: "e",
     image: "/images/category-5.webp",
   },
   {
-    label: "Offres exclusives",
+    label: "Exclusive offers",
     href: "#offres-exclusives",
     area: "f",
     image: "/images/category-6.jpg",
@@ -72,7 +72,7 @@ export default function CategoriesSection() {
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <h2 className="mb-6 text-xl font-semibold uppercase tracking-[0.18em] text-(--brand-primary)">
-        Catégories
+        Categories
       </h2>
 
       {/* Desktop grid */}

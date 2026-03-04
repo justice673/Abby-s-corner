@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 const AUTH_IMAGE = "/images/login.png";
-const LOGO = "/images/logo_sillage_parfumerie.svg";
+const LOGO = "/images/logo.png";
 
 type AuthLayoutProps = {
   children: React.ReactNode;
@@ -32,11 +32,11 @@ export default function AuthLayout({
         <Link
           href="/"
           className="absolute left-8 top-8 z-20 block w-32 sm:w-40"
-          aria-label="Sillage Parfumerie"
+          aria-label="Abby's Corner"
         >
           <Image
             src={LOGO}
-            alt="Sillage Parfumerie"
+            alt="Abby's Corner"
             width={160}
             height={50}
             className="h-10 w-auto object-contain object-left"
@@ -61,7 +61,7 @@ export default function AuthLayout({
           <Link href="/" className="mb-8 block w-36 sm:w-40">
             <Image
               src={LOGO}
-              alt="Sillage Parfumerie"
+              alt="Abby's Corner"
               width={160}
               height={50}
               className="h-10 w-auto object-contain"

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { FiFacebook, FiInstagram, FiTwitter } from "react-icons/fi";
 import { FaSnapchat, FaTiktok } from "react-icons/fa";
 
-const FOOTER_LOGO = "/images/footer-logo.svg";
+const FOOTER_LOGO = "/images/logo.png";
 
 const socialLinks = [
   { id: "facebook", href: "#", icon: FiFacebook },
@@ -35,52 +35,52 @@ function FooterLink({
 
 const stores = [
   {
-    name: "Parfum",
-    address: "17 route des Almadies, en face du supermarché Casino",
-    hours: "Tous les jours de 10h00 à 20h30",
-    phone: "33 868 35 17 - 78 175 73 73",
+    name: "Douala",
+    address: "Cameroon",
+    hours: "Every day from 10:00 AM to 8:30 PM",
+    phone: "+237 670-123-456",
   },
   {
-    name: "Sillage Mandela",
-    address: "12, Av Nelson Mandela, en face Hôpital Principal",
-    phone: "33 842 55 55 - 78 130 04 04",
+    name: "Yaoundé",
+    address: "Cameroon",
+    phone: "+237 680-234-567",
   },
   {
-    name: "La gondole",
-    address: "Sea Plaza, 1er étage à gauche",
-    phone: "33 864 63 63 - 77 099 12 92",
+    name: "Bamenda",
+    address: "Cameroon",
+    phone: "+237 690-345-678",
   },
 ];
 
 const aProposLinks = [
-  { label: "La maison Sillage", href: "#" },
-  { label: "Nos boutiques", href: "#" },
+  { label: "About Abby's", href: "#" },
+  { label: "Our stores", href: "#" },
   { label: "Blog", href: "#" },
-  { label: "Nos services", href: "#" },
+  { label: "Our services", href: "#" },
 ];
 
 const servicesLinks = [
-  { label: "Offres Exclusives", href: "#" },
+  { label: "Exclusive Offers", href: "#" },
   { label: "TRY ME", href: "#" },
-  { label: "Fidélité & Parrainage", href: "#" },
-  { label: "Prendre Rendez-vous", href: "#" },
-  { label: "La Box SODILUXE", href: "#" },
-  { label: "Sillage & Vous", href: "#" },
-  { label: "Livraison", href: "#" },
-  { label: "Contactez-nous", href: "#" },
+  { label: "Loyalty & Referral", href: "#" },
+  { label: "Book an Appointment", href: "#" },
+  { label: "SODILUXE Box", href: "#" },
+  { label: "Abby's & You", href: "#" },
+  { label: "Delivery", href: "#" },
+  { label: "Contact us", href: "#" },
 ];
 
 const compteLinks = [
   { label: "FAQ", href: "#" },
-  { label: "Informations légales", href: "#" },
+  { label: "Legal information", href: "#" },
 ];
 
 const legalLinks = [
-  { label: "Mentions légales", href: "#" },
-  { label: "CGV", href: "#" },
-  { label: "CGU", href: "#" },
-  { label: "Politique de confidentialité", href: "#" },
-  { label: "Paramètres des cookies", href: "#" },
+  { label: "Legal notice", href: "#" },
+  { label: "Terms of sale", href: "#" },
+  { label: "Terms of use", href: "#" },
+  { label: "Privacy policy", href: "#" },
+  { label: "Cookie settings", href: "#" },
 ];
 
 export default function Footer() {
@@ -91,10 +91,10 @@ export default function Footer() {
         <Link href="/" className="mb-10 block w-fit">
           <Image
             src={FOOTER_LOGO}
-            alt="Sillage Parfumerie"
+            alt="Abby's Corner logo"
             width={180}
             height={56}
-            className="h-12 w-auto object-contain"
+            className="h-20 w-auto object-contain"
           />
         </Link>
 
@@ -103,7 +103,7 @@ export default function Footer() {
           {/* Stores */}
           <div className="lg:col-span-2">
             <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-(--brand-primary)">
-              Nos boutiques
+              Our stores
             </h3>
             <div className="space-y-6">
               {stores.map((store) => (
@@ -130,7 +130,7 @@ export default function Footer() {
           {/* À propos */}
           <div>
             <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-(--brand-primary)">
-              À propos
+              About
             </h3>
             <ul className="space-y-2">
               {aProposLinks.map((link) => (
@@ -144,7 +144,7 @@ export default function Footer() {
           {/* Nos services */}
           <div>
             <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-(--brand-primary)">
-              Nos services
+              Our services
             </h3>
             <ul className="space-y-2">
               {servicesLinks.map((link) => (
@@ -158,7 +158,7 @@ export default function Footer() {
           {/* Mon compte */}
           <div>
             <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-(--brand-primary)">
-              Mon compte
+              My account
             </h3>
             <ul className="space-y-2">
               {compteLinks.map((link) => (
@@ -185,7 +185,7 @@ export default function Footer() {
             ))}
           </div>
           <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-(--brand-primary)">
-            Informations légales
+            Legal information
           </h3>
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
             {legalLinks.map((link) => (
@@ -200,7 +200,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <p className="mt-8 text-center text-xs text-(--brand-primary)/60">
-          © {new Date().getFullYear()} Sillage Parfumerie. Tous droits réservés.
+          © {new Date().getFullYear()} Abby's Corner. All rights reserved.
         </p>
       </div>
     </footer>
