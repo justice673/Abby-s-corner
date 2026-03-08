@@ -103,13 +103,25 @@ export default function AvailableSection() {
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold tracking-tight text-(--brand-primary)">
-          What we have
-        </h2>
-        <p className="mt-1 text-sm text-(--brand-primary)/70">
-          Discover our selection of perfumes and available products
-        </p>
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight text-(--brand-primary)">
+            What we have
+          </h2>
+          <p className="mt-1 text-sm text-(--brand-primary)/70">
+            Discover our selection of perfumes and available products
+          </p>
+        </div>
+        <Link
+          href="/shop"
+          className="group relative shrink-0 overflow-hidden rounded border-2 border-(--brand-primary) bg-white px-5 py-2.5 text-sm font-semibold text-(--brand-primary) transition-colors"
+        >
+          <span
+            className="absolute inset-x-0 top-0 h-0 bg-(--brand-light) transition-[height] duration-300 ease-out group-hover:h-full"
+            aria-hidden
+          />
+          <span className="relative z-10">See more</span>
+        </Link>
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">

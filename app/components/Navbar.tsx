@@ -13,6 +13,12 @@ import {
   FiChevronDown,
 } from "react-icons/fi";
 
+const topBarLinks = [
+  { href: "/shop", label: "Shop" },
+  { href: "#about", label: "About" },
+  { href: "#contact", label: "Contact" },
+];
+
 const navLinks = [
   { href: "#marques", label: "Brands", key: "marques" },
   { href: "#parfums", label: "Perfumes" },
@@ -22,10 +28,9 @@ const navLinks = [
     key: "maison",
   },
   { href: "#familles-olfactives", label: "Olfactory families" },
-  { href: "#box-sillage", label: "Abby&apos;s Box" },
+  { href: "#box-sillage", label: "Abby's Box" },
   { href: "#coffrets", label: "Gift sets" },
   { href: "#offres-exclusives", label: "🎁 Exclusive Offers" },
-  { href: "#contact", label: "Contact" },
 ];
 
 const marquesItems = [
@@ -106,7 +111,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-30 border-b border-black/5 bg-(--brand-light)/80 backdrop-blur-md">
       <nav className="relative mx-auto max-w-6xl px-4 py-2 md:px-6 lg:px-8">
-        {/* Top bar: logo + icons */}
+        {/* Top bar: logo + Shop / About / Contact + icons */}
         <div className="flex items-center justify-between gap-4 py-1">
           <a href="/" className="flex items-center gap-3">
             <div className="relative h-9 w-38 sm:h-10 sm:w-40">
@@ -119,6 +124,19 @@ export default function Navbar() {
               />
             </div>
           </a>
+
+          <ul className="hidden items-center gap-5 text-sm font-medium text-(--brand-primary)/80 sm:flex">
+            {topBarLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="transition-colors hover:text-(--brand-primary)"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
 
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
@@ -371,6 +389,17 @@ export default function Navbar() {
         {isOpen && (
           <div className="mt-1 border-t border-black/5 pt-2 md:hidden">
             <ul className="flex flex-col gap-2 pb-2 text-sm font-medium text-(--brand-primary)/90">
+              {topBarLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="block py-1.5 transition-colors hover:text-(--brand-primary)"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <a

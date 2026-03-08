@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { FiTrash2 } from "react-icons/fi";
 import { EmptyStateLottie } from "@/app/components/EmptyStateLottie";
 import {
@@ -15,8 +16,15 @@ import { getProductById } from "@/lib/products";
 import { formatPriceCFA } from "@/lib/utils";
 
 export default function CartSheet() {
+  const router = useRouter();
   const { items, isOpen, closeCart, removeItem, updateQuantity, totalItems, totalPrice } =
     useCart();
+  const hasItems = items.length > 0;
+
+  const goToCheckout = () => {
+    closeCart();
+    router.push("/checkout");
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
@@ -110,7 +118,7 @@ export default function CartSheet() {
           )}
         </div>
 
-        {items.length > 0 && (
+        {hasItems && (
           <SheetFooter className="flex-row gap-2 border-t border-black/5 p-4">
             <div className="flex w-full flex-col gap-3">
               <div className="flex justify-between text-sm font-semibold text-(--brand-primary)">
@@ -119,6 +127,7 @@ export default function CartSheet() {
               </div>
               <button
                 type="button"
+                onClick={goToCheckout}
                 className="w-full rounded-full bg-(--brand-primary) py-3 font-semibold uppercase tracking-[0.18em] text-(--brand-light) transition hover:bg-[#4a101a]"
               >
                 Checkout

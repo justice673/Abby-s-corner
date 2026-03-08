@@ -4,6 +4,7 @@ import "./globals.css";
 import FooterWrapper from "./components/FooterWrapper";
 import ScrollToTop from "./components/ScrollToTop";
 import CartProvider from "./components/CartProvider";
+import { WhatsAppButton } from "./components/WhatsAppButton";
 
 const headingFont = localFont({
   src: [
@@ -63,6 +64,7 @@ export default function RootLayout({
           {children}
           <FooterWrapper />
           <ScrollToTop />
+          <WhatsAppButton />
         </CartProvider>
       </body>
     </html>
