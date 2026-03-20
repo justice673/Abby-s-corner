@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import type { CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -37,6 +39,8 @@ export function SearchBar({
   autoFocus = false,
   className = "",
 }: SearchBarProps) {
+  const isMobileVariant = variant === "mobile" || variant === "overlay";
+
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<{
     products: Product[];
@@ -44,6 +48,15 @@ export function SearchBar({
   }>({ products: [], categories: [] });
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [fixedDropdownStyle, setFixedDropdownStyle] = useState<
+    CSSProperties | undefined
+  >({
+    position: "fixed",
+    left: 0,
+    top: 0,
+    width: "100%",
+    zIndex: 10000,
+  });
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -99,6 +112,34 @@ export function SearchBar({
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [onClose]);
+
+  // For mobile, float the dropdown above the page so it doesn't increase
+  // the navbar/hero layout height.
+  useEffect(() => {
+    if (!showResults || !isMobileVariant) return;
+
+    const update = () => {
+      if (!inputRef.current) return;
+      const rect = inputRef.current.getBoundingClientRect();
+      setFixedDropdownStyle({
+        position: "fixed",
+        left: rect.left,
+        // Keep dropdown snug under the input so nav text never peeks through.
+        top: rect.bottom + 2,
+        width: rect.width,
+        zIndex: 10000,
+      });
+    };
+
+    update();
+    window.addEventListener("resize", update);
+    window.addEventListener("scroll", update, true);
+
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", update, true);
+    };
+  }, [showResults, isMobileVariant]);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -226,101 +267,119 @@ export function SearchBar({
       </form>
 
       {/* Results dropdown */}
-      {showResults && (query.length >= 2) && (
-        <div
-          className={`absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-black/10 bg-white shadow-xl ${
-            variant === "overlay" ? "mx-0" : ""
-          }`}
-        >
-          {isLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-(--brand-primary)/20 border-t-(--brand-primary)" />
-            </div>
-          ) : hasResults ? (
-            <div className="max-h-[70vh] overflow-y-auto">
-              {/* Categories */}
-              {results.categories.length > 0 && (
-                <div className="border-b border-black/5 p-3">
-                  <p className="mb-2 text-xs font-medium uppercase tracking-wider text-(--brand-primary)/50">
-                    Categories
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {results.categories.map((cat) => (
-                      <Link
-                        key={cat._id}
-                        href={`/shop?category=${cat.slug}`}
-                        onClick={handleProductClick}
-                        className="inline-flex items-center gap-1.5 rounded-full bg-(--brand-primary)/5 px-3 py-1.5 text-sm font-medium text-(--brand-primary) transition hover:bg-(--brand-primary)/10"
+      {showResults && query.length >= 2 && (
+        (() => {
+          const dropdownEl = (
+            <div
+              className={`overflow-hidden rounded-2xl border border-black/10 bg-white shadow-xl z-10000 ${
+                isMobileVariant ? "" : "absolute left-0 right-0 top-full mt-2"
+              } ${variant === "overlay" ? "mx-0" : ""}`}
+              style={isMobileVariant ? fixedDropdownStyle : undefined}
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-(--brand-primary)/20 border-t-(--brand-primary)" />
+                </div>
+              ) : hasResults ? (
+                <div className="max-h-[70vh] overflow-y-auto">
+                  {/* Categories */}
+                  {results.categories.length > 0 && (
+                    <div className="border-b border-black/5 p-3 sm:p-4">
+                      <p className="mb-2 text-xs font-medium uppercase tracking-wider text-(--brand-primary)/50">
+                        Categories
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {results.categories.map((cat) => (
+                          <Link
+                            key={cat._id}
+                            href={`/shop?category=${cat.slug}`}
+                            onClick={handleProductClick}
+                            className="inline-flex items-center gap-1.5 rounded-full bg-(--brand-primary)/5 px-3 py-1.5 text-sm font-medium text-(--brand-primary) transition hover:bg-(--brand-primary)/10"
+                          >
+                            {cat.name}
+                            <FiArrowRight className="h-3 w-3" />
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Products */}
+                  {results.products.length > 0 && (
+                    <div className={isMobileVariant ? "p-4" : "p-2"}>
+                      <p
+                        className={`mb-2 text-xs font-medium uppercase tracking-wider text-(--brand-primary)/50 ${
+                          isMobileVariant ? "px-0" : "px-2"
+                        }`}
                       >
-                        {cat.name}
-                        <FiArrowRight className="h-3 w-3" />
-                      </Link>
-                    ))}
+                        Products
+                      </p>
+                      <div className="space-y-1">
+                        {results.products.map((product) => (
+                          <Link
+                            key={product._id}
+                            href={`/product/${product.slug || product._id}`}
+                            onClick={handleProductClick}
+                            className="flex items-center gap-3 rounded-xl p-2 transition hover:bg-(--brand-primary)/5"
+                          >
+                            <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-black/5">
+                              <Image
+                                src={product.image || "/images/product-1.jpg"}
+                                alt={product.name}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-xs font-medium uppercase tracking-wider text-(--brand-primary)/50">
+                                {product.brand}
+                              </p>
+                              <p className="truncate text-sm font-medium text-(--brand-primary)">
+                                {product.name}
+                              </p>
+                              <p className="text-sm font-semibold text-(--brand-primary)">
+                                {formatPrice(product.price)}
+                              </p>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* View all results */}
+                  <div
+                    className={`border-t border-black/5 ${isMobileVariant ? "p-4" : "p-2"}`}
+                  >
+                    <button
+                      onClick={handleSubmit}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-(--brand-primary) py-2.5 text-sm font-medium text-white transition hover:bg-(--brand-primary)/90"
+                    >
+                      View all results for &quot;{query}&quot;
+                      <FiArrowRight className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
-              )}
-
-              {/* Products */}
-              {results.products.length > 0 && (
-                <div className="p-2">
-                  <p className="mb-2 px-2 text-xs font-medium uppercase tracking-wider text-(--brand-primary)/50">
-                    Products
+              ) : (
+                <div className="py-8 text-center">
+                  <p className="text-sm text-(--brand-primary)/60">
+                    No results found for &quot;{query}&quot;
                   </p>
-                  <div className="space-y-1">
-                    {results.products.map((product) => (
-                      <Link
-                        key={product._id}
-                        href={`/product/${product.slug || product._id}`}
-                        onClick={handleProductClick}
-                        className="flex items-center gap-3 rounded-xl p-2 transition hover:bg-(--brand-primary)/5"
-                      >
-                        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-black/5">
-                          <Image
-                            src={product.image || "/images/product-1.jpg"}
-                            alt={product.name}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-xs font-medium uppercase tracking-wider text-(--brand-primary)/50">
-                            {product.brand}
-                          </p>
-                          <p className="truncate text-sm font-medium text-(--brand-primary)">
-                            {product.name}
-                          </p>
-                          <p className="text-sm font-semibold text-(--brand-primary)">
-                            {formatPrice(product.price)}
-                          </p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
+                  <p className="mt-1 text-xs text-(--brand-primary)/40">
+                    Try different keywords or browse categories
+                  </p>
                 </div>
               )}
+            </div>
+          );
 
-              {/* View all results */}
-              <div className="border-t border-black/5 p-2">
-                <button
-                  onClick={handleSubmit}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-(--brand-primary) py-2.5 text-sm font-medium text-white transition hover:bg-(--brand-primary)/90"
-                >
-                  View all results for &quot;{query}&quot;
-                  <FiArrowRight className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="py-8 text-center">
-              <p className="text-sm text-(--brand-primary)/60">
-                No results found for &quot;{query}&quot;
-              </p>
-              <p className="mt-1 text-xs text-(--brand-primary)/40">
-                Try different keywords or browse categories
-              </p>
-            </div>
-          )}
-        </div>
+          const shouldPortal =
+            isMobileVariant && typeof document !== "undefined";
+
+          return shouldPortal
+            ? createPortal(dropdownEl, document.body)
+            : dropdownEl;
+        })()
       )}
     </div>
   );
