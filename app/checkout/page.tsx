@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/app/components/Navbar";
 import { useCart } from "@/app/context/CartContext";
-import { getProductById } from "@/lib/products";
 import { formatPriceCFA } from "@/lib/utils";
 import {
   FiShoppingCart,
@@ -51,10 +50,13 @@ function buildWhatsAppMessage(
   },
   paymentLabel: string,
   items: { productId: string; quantity: number }[],
-  totalPrice: number
+  totalPrice: number,
+  orderRef: string | undefined,
+  getProduct: (productId: string) => { fullName: string; price: number } | undefined
 ): string {
   const lines = [
     "🛒 *New order from Abby's Perfumery*",
+    orderRef ? `📋 *Order Ref: ${orderRef}*` : null,
     "",
     "*Contact*",
     `Name: ${form.fullName}`,
@@ -69,7 +71,7 @@ function buildWhatsAppMessage(
     "*Order*",
   ];
   for (const { productId, quantity } of items) {
-    const product = getProductById(productId);
+    const product = getProduct(productId);
     if (!product) continue;
     const lineTotal = product.price * quantity;
     lines.push(
@@ -87,7 +89,7 @@ function buildWhatsAppMessage(
 }
 
 export default function CheckoutPage() {
-  const { items, totalPrice, totalItems } = useCart();
+  const { items, totalPrice, totalItems, getProduct } = useCart();
   const [payment, setPayment] = React.useState("");
   const [form, setForm] = React.useState({
     fullName: "",
@@ -97,6 +99,8 @@ export default function CheckoutPage() {
     city: "",
     deliveryNotes: "",
   });
+  const [orderRef, setOrderRef] = React.useState<string | null>(null);
+  const [generatingRef, setGeneratingRef] = React.useState(false);
 
   const paymentLabel =
     PAYMENT_OPTIONS.find((p) => p.value === payment)?.label ?? payment;
@@ -107,9 +111,38 @@ export default function CheckoutPage() {
     Boolean(form.city.trim()) &&
     Boolean(payment);
 
-  const sendToWhatsApp = () => {
+  const generateOrderRef = async () => {
+    try {
+      setGeneratingRef(true);
+      const res = await fetch("/api/orders/generate-ref", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items,
+          customer: { name: form.fullName, phone: form.phone },
+          total: totalPrice,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setOrderRef(data.orderRef);
+        return data.orderRef;
+      }
+    } catch (error) {
+      console.error("Failed to generate order ref:", error);
+    } finally {
+      setGeneratingRef(false);
+    }
+    return null;
+  };
+
+  const sendToWhatsApp = async () => {
+    let ref = orderRef;
+    if (!ref) {
+      ref = await generateOrderRef();
+    }
     const text = encodeURIComponent(
-      buildWhatsAppMessage(form, paymentLabel, items, totalPrice)
+      buildWhatsAppMessage(form, paymentLabel, items, totalPrice, ref || undefined, getProduct)
     );
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, "_blank");
   };
@@ -313,7 +346,7 @@ export default function CheckoutPage() {
                 </h2>
                 <ul className="mt-4 space-y-3 border-b border-(--brand-primary)/10 pb-4">
                   {items.map(({ productId, quantity }) => {
-                    const product = getProductById(productId);
+                    const product = getProduct(productId);
                     if (!product) return null;
                     const lineTotal = product.price * quantity;
                     return (
@@ -355,12 +388,17 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 py-4 font-semibold text-white transition hover:bg-[#20BD5A] disabled:cursor-not-allowed disabled:opacity-50"
-                  disabled={!canSend}
+                  disabled={!canSend || generatingRef}
                   onClick={sendToWhatsApp}
                 >
                   <FaWhatsapp className="h-5 w-5" />
-                  Send order to WhatsApp
+                  {generatingRef ? "Preparing order..." : "Send order to WhatsApp"}
                 </button>
+                {orderRef && (
+                  <p className="mt-2 text-center text-xs font-medium text-(--brand-primary)">
+                    Your order reference: <span className="font-mono font-bold">{orderRef}</span>
+                  </p>
+                )}
                 <p className="mt-3 text-center text-xs text-(--brand-primary)/70">
                   We&apos;ll reply to discuss payment and delivery.
                 </p>

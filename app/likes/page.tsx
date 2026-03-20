@@ -1,73 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import LikesHero from "../components/LikesHero";
 import { FiHeart, FiShoppingCart } from "react-icons/fi";
 import { useCart } from "@/app/context/CartContext";
 import { formatPriceCFA } from "@/lib/utils";
+import { useFavorites } from "@/hooks/use-favorites";
 
-const likedProducts = [
-  {
-    id: "1",
-    name: "Terre d'Hermès",
-    fullName: "TERRE D'HERMÈS - EAU DE PARFUM",
-    brand: "HERMÈS",
-    tags: ["Boisé", "Épicé"],
-    price: 55800,
-    tete: "Pamplemousse",
-    coeur: "Épices",
-    fond: "Bois de cèdre",
-    stockLeft: 14,
-    image: "/images/product-1.jpg",
-  },
-  {
-    id: "2",
-    name: "Black Orchid",
-    fullName: "BLACK ORCHID - EAU DE PARFUM",
-    brand: "TOM FORD",
-    tags: ["Oriental", "Fleuri"],
-    price: 78720,
-    tete: "Truffe noire",
-    coeur: "Orchidée",
-    fond: "Patchouli",
-    stockLeft: 8,
-    image: "/images/product-2.jpg",
-  },
-  {
-    id: "3",
-    name: "N°5",
-    fullName: "N°5 - EAU DE PARFUM",
-    brand: "CHANEL",
-    tags: ["Fleuri", "Aldéhydé"],
-    price: 62320,
-    tete: "Aldéhydes",
-    coeur: "Iris",
-    fond: "Vanille",
-    stockLeft: 22,
-    image: "/images/product-3.jpg",
-  },
-  {
-    id: "4",
-    name: "Santal 33",
-    fullName: "SANTAL 33 - EAU DE PARFUM",
-    brand: "LE LABO",
-    tags: ["Boisé", "Cuir"],
-    price: 108240,
-    tete: "Cardamome",
-    coeur: "Iris",
-    fond: "Santal",
-    stockLeft: 3,
-    image: "/images/product-7.jpg",
-  },
-];
+type LikedProduct = {
+  _id: string;
+  name: string;
+  fullName: string;
+  brand: string;
+  tags: string[];
+  price: number;
+  tete?: string;
+  coeur?: string;
+  fond?: string;
+  stockLeft?: number;
+  stock?: number;
+  image: string;
+};
 
 function ProductCard({
   product,
   onRemove,
   onAddToCart,
 }: {
-  product: (typeof likedProducts)[0];
+  product: LikedProduct;
   onRemove: () => void;
   onAddToCart: () => void;
 }) {
@@ -137,10 +98,38 @@ function ProductCard({
 
 export default function LikesPage() {
   const { addItem } = useCart();
-  const [products, setProducts] = useState(likedProducts);
+  const { likedIds, toggleLike } = useFavorites();
+  const [products, setProducts] = useState<LikedProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        if (likedIds.size === 0) {
+          setProducts([]);
+          return;
+        }
+        const res = await fetch("/api/products?activeOnly=true");
+        if (!res.ok) return;
+        const data = await res.json();
+        const setIds = new Set(likedIds);
+        const filtered = (data || []).filter((p: { _id: string }) =>
+          setIds.has(p._id)
+        );
+        setProducts(filtered);
+      } catch (error) {
+        console.error("Failed to load liked products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+  }, [likedIds]);
 
   const removeFromLikes = (id: string) => {
-    setProducts((prev) => prev.filter((p) => p.id !== id));
+    toggleLike(id);
+    setProducts((prev) => prev.filter((p) => p._id !== id));
   };
 
   return (
@@ -149,7 +138,11 @@ export default function LikesPage() {
       <main>
         <LikesHero />
         <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          {products.length === 0 ? (
+          {loading ? (
+            <p className="text-center text-sm text-(--brand-primary)/70">
+              Loading your favorites…
+            </p>
+          ) : products.length === 0 ? (
             <p className="text-center text-sm text-(--brand-primary)/70">
               No products in your favorites at the moment.
             </p>

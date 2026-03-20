@@ -1,25 +1,18 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { FiSearch } from "react-icons/fi";
 
-const recentPosts = [
-  {
-    id: "1",
-    title: "How to choose your perfume based on your personality",
-    date: "March 15, 2025",
-    image: "/images/new-arrivals-1.jpg",
-  },
-  {
-    id: "2",
-    title: "Olfactory families explained",
-    date: "March 8, 2025",
-    image: "/images/new-arrivals-2.webp",
-  },
-  {
-    id: "3",
-    title: "Perfume rituals for spring",
-    date: "March 1, 2025",
-    image: "/images/dropdown-4.webp",
-  },
-];
+interface BlogPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  tag: string;
+  date: string;
+  image: string;
+  comments?: number;
+}
 
 const archives = ["March 2025", "February 2025", "January 2025"];
 
@@ -30,76 +23,74 @@ const categories = [
   { name: "New brands", count: 4 },
 ];
 
-const blogPosts = [
-  {
-    id: "1",
-    title: "How to store your perfume so it lasts longer",
-    excerpt:
-      "Discover the best practices to preserve the quality and intensity of your fragrances over time.",
-    tag: "Tips",
-    date: "March 15, 2025",
-    comments: 5,
-    image: "/images/product-1.jpg",
-  },
-  {
-    id: "2",
-    title: "Top, heart and base notes: understanding the olfactory pyramid",
-    excerpt:
-      "An introduction to the three phases of a perfume and how they evolve on your skin throughout the day.",
-    tag: "Guide",
-    date: "March 12, 2025",
-    comments: 8,
-    image:
-      "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=600&q=80",
-  },
-  {
-    id: "3",
-    title: "Top 5 perfumes for summer 2025",
-    excerpt:
-      "Our selection of fresh, light fragrances, perfect for sunny days.",
-    tag: "Selection",
-    date: "March 8, 2025",
-    comments: 12,
-    image: "/images/blog-top5.png",
-  },
-  {
-    id: "4",
-    title: "The history of perfume: from ancient civilizations to today",
-    excerpt:
-      "A journey through the ages to understand how perfume has shaped cultures and societies.",
-    tag: "History",
-    date: "March 5, 2025",
-    comments: 3,
-    image: "/images/product-2.jpg",
-  },
-  {
-    id: "5",
-    title: "How to apply perfume for optimal sillage",
-    excerpt:
-      "Pulse points, the ideal amount and mistakes to avoid for perfect diffusion.",
-    tag: "Tips",
-    date: "March 1, 2025",
-    comments: 7,
-    image: "/images/product-3.png",
-  },
-  {
-    id: "6",
-    title: "Unisex perfumes: the trend that's winning over",
-    excerpt:
-      "Why gender-neutral fragrances are gaining popularity and which ones to discover first.",
-    tag: "Trends",
-    date: "February 28, 2025",
-    comments: 4,
-    image: "/images/login.webp",
-  },
-];
-
 export default function BlogSection() {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const recentPosts = blogPosts.slice(0, 3);
+
+  useEffect(() => {
+    const fetchBlogPosts = async () => {
+      try {
+        // Fetch from actual BlogPost table (published posts)
+        const res = await fetch("/api/homepage/blog?limit=6");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.posts) {
+            setBlogPosts(data.posts);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch blog posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogPosts();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="mb-10 flex items-center justify-between">
+          <div className="h-8 w-32 animate-pulse rounded bg-black/10" />
+          <div className="h-4 w-32 animate-pulse rounded bg-black/10" />
+        </div>
+        <div className="flex gap-8">
+          <div className="hidden w-1/4 space-y-4 lg:block">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-16 animate-pulse rounded bg-black/10" />
+            ))}
+          </div>
+          <div className="flex-1 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="aspect-4/3 rounded bg-black/10" />
+                <div className="mt-4 h-4 w-3/4 rounded bg-black/10" />
+                <div className="mt-2 h-3 w-full rounded bg-black/10" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!blogPosts.length) return null;
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-      <h2 className="mb-10 text-2xl font-bold uppercase tracking-wide text-(--brand-primary)">
-        Our blog
-      </h2>
+      <div className="mb-10 flex flex-wrap items-center justify-between gap-4">
+        <h2 className="text-2xl font-bold uppercase tracking-wide text-(--brand-primary)">
+          Our blog
+        </h2>
+        <Link
+          href="/blog"
+          className="text-sm font-semibold uppercase tracking-wider text-(--brand-primary) underline transition-opacity hover:opacity-70"
+        >
+          View all articles →
+        </Link>
+      </div>
 
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Sidebar - 1/4 */}
@@ -112,9 +103,9 @@ export default function BlogSection() {
               </h3>
               <ul className="space-y-3">
                 {recentPosts.map((post) => (
-                  <li key={post.id}>
-                    <a
-                      href="#"
+                  <li key={post.slug}>
+                    <Link
+                      href={`/blog/${post.slug}`}
                       className="group flex gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-black/10"
                     >
                       <img
@@ -131,7 +122,7 @@ export default function BlogSection() {
                           {post.date}
                         </p>
                       </div>
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -204,10 +195,10 @@ export default function BlogSection() {
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {blogPosts.map((post) => (
               <article
-                key={post.id}
+                key={post.slug}
                 className="flex flex-col overflow-hidden bg-white shadow-md transition-shadow hover:shadow-lg"
               >
-                <a href="#" className="relative block overflow-hidden">
+                <Link href={`/blog/${post.slug}`} className="relative block overflow-hidden">
                   <div className="relative aspect-4/3 overflow-hidden bg-black/5">
                     <img
                       src={post.image}
@@ -219,25 +210,25 @@ export default function BlogSection() {
                       {post.tag}
                     </span>
                   </div>
-                </a>
+                </Link>
                 <div className="flex flex-1 flex-col p-4">
                   <h3 className="text-base font-semibold leading-snug text-(--brand-primary)">
-                    <a href="#" className="transition-opacity hover:opacity-80">
+                    <Link href={`/blog/${post.slug}`} className="transition-opacity hover:opacity-80">
                       {post.title}
-                    </a>
+                    </Link>
                   </h3>
                   <p className="mt-2 line-clamp-2 text-sm text-(--brand-primary)/70">
                     {post.excerpt}
                   </p>
-                  <a
-                    href="#"
+                  <Link
+                    href={`/blog/${post.slug}`}
                     className="mt-3 inline-flex text-xs font-semibold uppercase tracking-wider text-(--brand-primary) underline transition-opacity hover:opacity-80"
                   >
                     Read more »
-                  </a>
+                  </Link>
                   <div className="mt-auto flex gap-4 pt-4 text-xs text-(--brand-primary)/60">
                     <span>{post.date}</span>
-                    <span>{post.comments} comments</span>
+                    <span>{post.comments || 0} comments</span>
                   </div>
                 </div>
               </article>

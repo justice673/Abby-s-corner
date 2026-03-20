@@ -1,6 +1,10 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import CategoriesSection from "./components/Categories";
+import FrenchPerfumeSection from "./components/FrenchPerfumeSection";
+import EnglishPerfumeSection from "./components/EnglishPerfumeSection";
+import ArabicPerfumeSection from "./components/ArabicPerfumeSection";
+import FragranceBarSection from "./components/FragranceBarSection";
 import NewArrivalsSection from "./components/NewArrivalsSection";
 import DiscountSection from "./components/DiscountSection";
 import StoreSection from "./components/StoreSection";
@@ -14,6 +18,10 @@ export default function Home() {
       <main>
         <Hero />
         <CategoriesSection />
+        <FrenchPerfumeSection />
+        <EnglishPerfumeSection />
+        <ArabicPerfumeSection />
+        <FragranceBarSection />
         <NewArrivalsSection />
         <DiscountSection />
         <StoreSection />

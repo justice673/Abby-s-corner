@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Providers from "./components/Providers";
 import FooterWrapper from "./components/FooterWrapper";
 import ScrollToTop from "./components/ScrollToTop";
 import CartProvider from "./components/CartProvider";
@@ -60,12 +61,14 @@ export default function RootLayout({
       <body
         className={`${headingFont.variable} ${bodyFont.variable} antialiased`}
       >
-        <CartProvider>
-          {children}
-          <FooterWrapper />
-          <ScrollToTop />
-          <WhatsAppButton />
-        </CartProvider>
+        <Providers>
+          <CartProvider>
+            {children}
+            <FooterWrapper />
+            <ScrollToTop />
+            <WhatsAppButton />
+          </CartProvider>
+        </Providers>
       </body>
     </html>
   );

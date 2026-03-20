@@ -1,16 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import { FiArrowRight, FiPlayCircle } from "react-icons/fi";
 import { useEffect, useRef, useState } from "react";
 
-const HERO_IMAGE = "/images/5Parfums.webp";
-const HERO_VIDEO = "/videos/hero-2.mp4";
+const HERO_VIDEO_INTRO = "/videos/IMG_7673.MOV";
+const HERO_VIDEO_MAIN = "/videos/IMG_7729.MOV";
 const DELAY_BEFORE_VIDEO_MS = 5000;
 
 export default function Hero() {
   const [showVideo, setShowVideo] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const introVideoRef = useRef<HTMLVideoElement>(null);
+  const mainVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowVideo(true), DELAY_BEFORE_VIDEO_MS);
@@ -18,46 +18,46 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    const mainVideo = mainVideoRef.current;
+    if (!mainVideo) return;
 
     const playVideo = () => {
-      video.play().catch(() => { });
+      mainVideo.play().catch(() => {});
     };
 
-    video.addEventListener("loadeddata", playVideo, { once: true });
-    if (video.readyState >= 2) playVideo();
+    mainVideo.addEventListener("loadeddata", playVideo, { once: true });
+    if (mainVideo.readyState >= 2) playVideo();
   }, []);
 
   return (
     <section className="relative w-full overflow-hidden">
       {/* Background: image first (fast load), then video after 5 sec */}
       <div className="absolute inset-0">
-        {/* Static image - visible on load and until video starts */}
-        <div
-          className={`absolute inset-0 transition-opacity duration-700 ${showVideo ? "opacity-0 pointer-events-none" : "opacity-100"
-            }`}
-        >
-          <Image
-            src={HERO_IMAGE}
-            alt="Signature perfumes displayed on a marble counter"
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-
-        {/* Single video - loops infinitely after 5 sec */}
+        {/* Intro video - visible on load and until main video starts */}
         <video
-          ref={videoRef}
-          src={HERO_VIDEO}
+          ref={introVideoRef}
+          src={HERO_VIDEO_INTRO}
+          muted
+          playsInline
+          preload="auto"
+          autoPlay
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+            showVideo ? "opacity-0 pointer-events-none" : "opacity-100"
+          }`}
+        />
+
+        {/* Main video - loops infinitely after 5 sec */}
+        <video
+          ref={mainVideoRef}
+          src={HERO_VIDEO_MAIN}
           muted
           playsInline
           loop
           preload="auto"
           autoPlay
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${showVideo ? "opacity-100" : "opacity-0"
-            }`}
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+            showVideo ? "opacity-100" : "opacity-0"
+          }`}
         />
 
         <div className="absolute inset-0 bg-black/55" />

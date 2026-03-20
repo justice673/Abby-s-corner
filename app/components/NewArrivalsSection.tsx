@@ -3,56 +3,44 @@
 import { useRef, useState, useEffect } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-const arrivals = [
-  {
-    id: "1",
-    name: "Eau de parfum — Signature",
-    description: "Floral amber",
-    price: "From 29,520 FCFA",
-    image: "/images/new-arrivals-1.jpg",
-  },
-  {
-    id: "2",
-    name: "Eau de parfum — Lumière",
-    description: "Fresh notes",
-    price: "From 27,552 FCFA",
-    image: "/images/new-arrivals-2.webp",
-  },
-  {
-    id: "3",
-    name: "Eau de parfum — Abby's",
-    description: "Wood and musk",
-    price: "From 31,488 FCFA",
-    image: "/images/product-1.jpg",
-  },
-  {
-    id: "4",
-    name: "Scented candle — Garden",
-    description: "White flowers",
-    price: "18 368 FCFA",
-    image: "/images/product-2.jpg",
-  },
-  {
-    id: "5",
-    name: "Hair mist — Softness",
-    description: "Subtle trail",
-    price: "14 432 FCFA",
-    image: "/images/product-3.png",
-  },
-  {
-    id: "6",
-    name: "Discovery set",
-    description: "3 miniatures",
-    price: "22 960 FCFA",
-    image: "/images/product-4.jpg",
-  },
-];
+interface Arrival {
+  name: string;
+  description: string;
+  price: string;
+  image: string;
+  link?: string;
+}
 
 export default function NewArrivalsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [arrivals, setArrivals] = useState<Arrival[]>([]);
+  const [title, setTitle] = useState("New arrivals");
+  const [subtitle, setSubtitle] = useState("The latest items added to our collection");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchArrivals = async () => {
+      try {
+        // Fetch from actual Product table (newest products)
+        const res = await fetch("/api/homepage/new-arrivals?limit=8");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.arrivals) {
+            setArrivals(data.arrivals);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch arrivals:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArrivals();
+  }, []);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -61,8 +49,6 @@ export default function NewArrivalsSection() {
     const updateScrollState = () => {
       const { scrollLeft, scrollWidth, clientWidth } = el;
       const maxScroll = scrollWidth - clientWidth;
-      // Defer state updates to avoid "state update on unmounted component" when
-      // ResizeObserver fires synchronously during observe()
       requestAnimationFrame(() => {
         setScrollProgress(maxScroll > 0 ? scrollLeft / maxScroll : 0);
         setCanScrollLeft(scrollLeft > 0);
@@ -78,7 +64,29 @@ export default function NewArrivalsSection() {
       el.removeEventListener("scroll", updateScrollState);
       ro.disconnect();
     };
-  }, []);
+  }, [arrivals]);
+
+  if (loading) {
+    return (
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="mb-6">
+          <div className="h-8 w-40 animate-pulse rounded bg-black/10" />
+          <div className="mt-2 h-4 w-64 animate-pulse rounded bg-black/10" />
+        </div>
+        <div className="flex gap-6">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="w-[220px] shrink-0">
+              <div className="h-44 animate-pulse rounded bg-black/10" />
+              <div className="mt-4 h-4 w-3/4 animate-pulse rounded bg-black/10" />
+              <div className="mt-2 h-3 w-1/2 animate-pulse rounded bg-black/10" />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (!arrivals.length) return null;
 
   const scroll = (dir: "left" | "right") => {
     const el = scrollRef.current;
@@ -93,10 +101,10 @@ export default function NewArrivalsSection() {
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-(--brand-primary)">
-            New arrivals
+            {title}
           </h2>
           <p className="mt-1 text-sm text-(--brand-primary)/70">
-            The latest items added to our collection
+            {subtitle}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -127,10 +135,10 @@ export default function NewArrivalsSection() {
         className="-mx-4 overflow-x-auto scroll-smooth px-4 pb-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         <div className="flex gap-6 sm:gap-8">
-          {arrivals.map((item) => (
+          {arrivals.map((item, index) => (
             <a
-              key={item.id}
-              href="#"
+              key={index}
+              href={item.link || "#"}
               className="group flex w-[220px] shrink-0 flex-col overflow-hidden bg-white shadow-sm transition-shadow hover:shadow-md"
             >
               <div className="relative h-44 overflow-hidden bg-black/5">

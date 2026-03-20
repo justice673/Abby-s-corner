@@ -12,12 +12,11 @@ import {
   SheetFooter,
 } from "@/app/components/ui/sheet";
 import { useCart } from "@/app/context/CartContext";
-import { getProductById } from "@/lib/products";
 import { formatPriceCFA } from "@/lib/utils";
 
 export default function CartSheet() {
   const router = useRouter();
-  const { items, isOpen, closeCart, removeItem, updateQuantity, totalItems, totalPrice } =
+  const { items, isOpen, closeCart, removeItem, updateQuantity, totalItems, totalPrice, getProduct } =
     useCart();
   const hasItems = items.length > 0;
 
@@ -51,7 +50,7 @@ export default function CartSheet() {
           ) : (
             <ul className="space-y-4">
               {items.map(({ productId, quantity }) => {
-                const product = getProductById(productId);
+                const product = getProduct(productId);
                 if (!product) return null;
                 return (
                   <li

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { FiHeart, FiShoppingCart, FiShare2, FiShield } from "react-icons/fi";
 import { useCart } from "@/app/context/CartContext";
+import { useFavorites } from "@/hooks/use-favorites";
 import { IoStar, IoStarOutline } from "react-icons/io5";
 import { formatPriceCFA } from "@/lib/utils";
 import {
@@ -38,7 +39,8 @@ function StarRating({ rating }: { rating: number }) {
 
 export default function ProductDetailClient({ product }: { product: Product }) {
   const { addItem } = useCart();
-  const [isLiked, setIsLiked] = useState(false);
+  const { likedIds, toggleLike } = useFavorites();
+  const isLiked = likedIds.has(product.id);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const categoryLabel = categoryLabels[product.category] ?? product.category;
   const similarProducts = getSimilarProducts(product.id);
@@ -108,7 +110,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 type="button"
                 aria-label="Add to favorites"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-(--brand-primary)/20 text-(--brand-primary) transition hover:bg-(--brand-primary)/5"
-                onClick={() => setIsLiked(!isLiked)}
+                onClick={() => toggleLike(product.id)}
               >
                 <FiHeart
                   className={`h-5 w-5 ${isLiked ? "fill-(--brand-primary)" : ""}`}
@@ -160,10 +162,17 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               <dt className="text-(--brand-primary)/70">Category</dt>
               <dd className="font-medium">{categoryLabel}</dd>
             </div>
-            <div className="flex justify-between text-sm">
-              <dt className="text-(--brand-primary)/70">Notes</dt>
-              <dd className="font-medium text-gray-800">
-                <span className="text-(--brand-primary)">Top:</span> {product.tete} · <span className="text-(--brand-primary)">Heart:</span> {product.coeur} · <span className="text-(--brand-primary)">Base:</span> {product.fond}
+            <div className="flex justify-between gap-6 text-sm">
+              <dt className="shrink-0 text-(--brand-primary)/70">Notes</dt>
+              <dd className="min-w-0 text-(--brand-primary)/85">
+                <span className="font-semibold text-amber-800">Top:</span>
+                <span className="ml-1">{product.tete}</span>
+                {" · "}
+                <span className="font-semibold text-amber-800">Heart:</span>
+                <span className="ml-1">{product.coeur}</span>
+                {" · "}
+                <span className="font-semibold text-amber-800">Base:</span>
+                <span className="ml-1">{product.fond}</span>
               </dd>
             </div>
           </dl>

@@ -1,30 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import Navbar from "../components/Navbar";
 import { FiHeart, FiShoppingCart, FiRefreshCw, FiChevronDown } from "react-icons/fi";
 import { useCart } from "@/app/context/CartContext";
 import { formatPriceCFA } from "@/lib/utils";
-import { products } from "@/lib/products";
+import { Loader2 } from "lucide-react";
+import { useFavorites } from "@/hooks/use-favorites";
 
-const categories = [
-  { id: "femme", label: "Women's perfumes" },
-  { id: "homme", label: "Men's perfumes" },
-  { id: "unisexe", label: "Unisex" },
-  { id: "maison", label: "Home & wellness" },
-  { id: "coffrets", label: "Gift sets" },
-];
+type ShopProduct = {
+  id: string;
+  name: string;
+  fullName: string;
+  brand: string;
+  tags: string[];
+  condition: string;
+  category: string;
+  price: number;
+  tete: string;
+  coeur: string;
+  fond: string;
+  volume: string;
+  stockLeft: number;
+  image: string;
+  images: string[];
+  createdAt?: string;
+};
 
-const conditions = [
-  { id: "neuf-etiquette", label: "New with tag" },
-  { id: "neuf-sans", label: "New without tag" },
-  { id: "tres-bon", label: "Very good condition" },
-  { id: "bon", label: "Good condition" },
-  { id: "satisfaisant", label: "Satisfactory" },
-];
+const conditionToId: Record<string, string> = {
+  "New with tag": "neuf-etiquette",
+  "New without tag": "neuf-sans",
+  "Very good condition": "tres-bon",
+  "Good condition": "bon",
+  "Satisfactory": "satisfaisant",
+};
 
-const volumes = ["30 ml", "50 ml", "100 ml", "150 ml", "200 ml"];
+const idToCondition: Record<string, string> = Object.fromEntries(
+  Object.entries(conditionToId).map(([k, v]) => [v, k])
+);
 
 const sortOptions = [
   { value: "recent", label: "Most recent" },
@@ -38,14 +53,14 @@ function ProductCard({
   onLike,
   onAddToCart,
 }: {
-  product: (typeof products)[0];
+  product: ShopProduct;
   isLiked: boolean;
   onLike: () => void;
   onAddToCart: () => void;
 }) {
   return (
     <Link
-      href={`/shop/${product.id}`}
+      href={`/product/${product.id}`}
       className="group flex flex-col overflow-hidden bg-white shadow-sm transition-shadow hover:shadow-md"
     >
       <div className="relative h-32 overflow-hidden bg-black/5 sm:h-44 md:h-48">
@@ -92,11 +107,13 @@ function ProductCard({
         <p className="text-sm font-semibold text-(--brand-primary)">
           {formatPriceCFA(product.price)}
         </p>
-        <div className="space-y-0.5 text-xs text-gray-800">
-          <p><span className="font-medium text-(--brand-primary)">Top:</span> {product.tete}</p>
-          <p><span className="font-medium text-(--brand-primary)">Heart:</span> {product.coeur}</p>
-          <p><span className="font-medium text-(--brand-primary)">Base:</span> {product.fond}</p>
-        </div>
+        {(product.tete || product.coeur || product.fond) && (
+          <div className="space-y-0.5 text-xs text-gray-800">
+            {product.tete && <p><span className="font-medium text-(--brand-primary)">Top:</span> {product.tete}</p>}
+            {product.coeur && <p><span className="font-medium text-(--brand-primary)">Heart:</span> {product.coeur}</p>}
+            {product.fond && <p><span className="font-medium text-(--brand-primary)">Base:</span> {product.fond}</p>}
+          </div>
+        )}
         <button
           type="button"
           onClick={(e) => {
@@ -116,11 +133,65 @@ function ProductCard({
 
 export default function ShopPage() {
   const { addItem } = useCart();
+  const { likedIds, toggleLike } = useFavorites();
+  const searchParams = useSearchParams();
+  const [products, setProducts] = useState<ShopProduct[]>([]);
+  const [loading, setLoading] = useState(true);
   const [categoryFilters, setCategoryFilters] = useState<Set<string>>(new Set());
   const [conditionFilters, setConditionFilters] = useState<Set<string>>(new Set());
   const [volumeFilters, setVolumeFilters] = useState<Set<string>>(new Set());
-  const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
   const [sort, setSort] = useState("recent");
+
+  const fetchProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/products");
+      if (res.ok) {
+        const data = await res.json();
+        const mapped: ShopProduct[] = (data || []).map((p: { _id: string; name?: string; fullName?: string; brand?: string; tags?: string[]; condition?: string; category?: string; price?: number; tete?: string; coeur?: string; fond?: string; volume?: string; stockLeft?: number; image?: string; images?: string[]; createdAt?: string }) => ({
+          id: p._id,
+          name: p.name ?? "",
+          fullName: p.fullName ?? p.name ?? "",
+          brand: p.brand ?? "",
+          tags: p.tags ?? [],
+          condition: p.condition ?? "New with tag",
+          category: p.category ?? "",
+          price: p.price ?? 0,
+          tete: p.tete ?? "",
+          coeur: p.coeur ?? "",
+          fond: p.fond ?? "",
+          volume: p.volume ?? "",
+          stockLeft: p.stockLeft ?? 0,
+          image: p.image ?? "/images/product-1.jpg",
+          images: Array.isArray(p.images) && p.images.length > 0 ? p.images : [p.image ?? "/images/product-1.jpg"],
+          createdAt: p.createdAt,
+        }));
+        setProducts(mapped);
+      }
+    } catch (e) {
+      console.error("Failed to fetch products:", e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  // Initialize filters from URL params (?category=...&brand=...&search=...)
+  useEffect(() => {
+    const category = searchParams.get("category");
+    const brand = searchParams.get("brand");
+
+    if (category) {
+      setCategoryFilters(new Set([category]));
+    } else {
+      setCategoryFilters(new Set());
+    }
+
+    // Brand is handled via products filtering below
+  }, [searchParams]);
 
   const toggleFilter = (
     setter: React.Dispatch<React.SetStateAction<Set<string>>>,
@@ -140,13 +211,34 @@ export default function ShopPage() {
     setVolumeFilters(new Set());
   };
 
+  const categories = Array.from(
+    new Set(products.map((p) => p.category).filter(Boolean))
+  ).sort().map((id) => ({ id, label: id }));
+
+  const conditions = [
+    { id: "neuf-etiquette", label: "New with tag" },
+    { id: "neuf-sans", label: "New without tag" },
+    { id: "tres-bon", label: "Very good condition" },
+    { id: "bon", label: "Good condition" },
+    { id: "satisfaisant", label: "Satisfactory" },
+  ];
+
+  const volumes = Array.from(
+    new Set(products.map((p) => p.volume).filter(Boolean))
+  ).sort();
+
+  const urlBrand = searchParams.get("brand");
+  const urlSearch = searchParams.get("search")?.toLowerCase().trim() || "";
+
   const filteredProducts = products.filter((p) => {
+    if (urlBrand && p.brand.toLowerCase() !== urlBrand.toLowerCase()) return false;
+    if (urlSearch) {
+      const haystack = `${p.name} ${p.fullName} ${p.brand} ${(p.tags || []).join(" ")}`.toLowerCase();
+      if (!haystack.includes(urlSearch)) return false;
+    }
     if (categoryFilters.size && !categoryFilters.has(p.category)) return false;
     if (conditionFilters.size) {
-      const condId = p.condition === "New with tag" ? "neuf-etiquette" :
-        p.condition === "New without tag" ? "neuf-sans" :
-        p.condition === "Very good condition" ? "tres-bon" :
-        p.condition === "Good condition" ? "bon" : "satisfaisant";
+      const condId = conditionToId[p.condition] ?? "satisfaisant";
       if (!conditionFilters.has(condId)) return false;
     }
     if (volumeFilters.size && !volumeFilters.has(p.volume)) return false;
@@ -156,6 +248,7 @@ export default function ShopPage() {
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sort === "price-asc") return a.price - b.price;
     if (sort === "price-desc") return b.price - a.price;
+    if (sort === "recent" && a.createdAt && b.createdAt) return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     return 0;
   });
 
@@ -303,24 +396,40 @@ export default function ShopPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 xl:grid-cols-4">
-              {sortedProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  isLiked={likedIds.has(product.id)}
-                  onLike={() => {
-                    setLikedIds((prev) => {
-                      const next = new Set(prev);
-                      if (next.has(product.id)) next.delete(product.id);
-                      else next.add(product.id);
-                      return next;
-                    });
-                  }}
-                  onAddToCart={() => addItem(product.id)}
-                />
-              ))}
-            </div>
+            {loading ? (
+              <div className="flex min-h-[200px] items-center justify-center">
+                <div className="flex items-center gap-2 text-(--brand-primary)/70">
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                  <span>Loading products…</span>
+                </div>
+              </div>
+            ) : sortedProducts.length === 0 ? (
+              <div className="flex min-h-[200px] flex-col items-center justify-center rounded-lg border border-(--brand-primary)/10 bg-white/50 py-12 text-center">
+                <p className="font-medium text-(--brand-primary)">No products match your filters.</p>
+                <p className="mt-1 text-sm text-(--brand-primary)/70">
+                  Try resetting filters or check back later.
+                </p>
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="mt-4 rounded-full bg-(--brand-primary) px-4 py-2 text-sm font-medium text-white hover:bg-(--brand-primary)/90"
+                >
+                  Reset filters
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 xl:grid-cols-4">
+                {sortedProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    isLiked={likedIds.has(product.id)}
+                    onLike={() => toggleLike(product.id)}
+                    onAddToCart={() => addItem(product.id)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </main>

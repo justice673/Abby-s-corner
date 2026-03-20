@@ -3,12 +3,12 @@
 import { usePathname } from "next/navigation";
 import Footer from "./Footer";
 
-const AUTH_PATHS = ["/login", "/register"];
+const HIDE_FOOTER_PATHS = ["/login", "/register", "/dashboard", "/auth", "/account", "/setup"];
 
 export default function FooterWrapper() {
   const pathname = usePathname() ?? "";
-  const isAuthPage = AUTH_PATHS.some((p) => pathname.startsWith(p));
+  const shouldHide = HIDE_FOOTER_PATHS.some((p) => pathname.startsWith(p));
 
-  if (isAuthPage) return null;
+  if (shouldHide) return null;
   return <Footer />;
 }

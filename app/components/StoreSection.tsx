@@ -9,7 +9,7 @@ const stores = [
     address: "Douala, Cameroon",
     phone: "+237 670-123-456",
     href: "#",
-    image: "/images/store-1.webp",
+    image: "/images/store-1.jpeg",
   },
   // {
   //   id: "2",
@@ -47,10 +47,10 @@ export default function StoreSection() {
         {/* Hero title */}
         <div className="text-center">
           <h2 className="text-3xl font-semibold tracking-wide text-white drop-shadow-md sm:text-4xl md:text-5xl font-heading">
-            Our store
+            Visit Abby&apos;s Corner
           </h2>
           <p className="mt-4 text-sm font-medium tracking-[0.2em] text-white/90 sm:text-base">
-            Discover our stores
+            A boutique with French, English, Arabic perfumes & a fragrance bar
           </p>
         </div>
 
@@ -83,6 +83,35 @@ export default function StoreSection() {
               </div>
             </a>
           ))}
+        </div>
+
+        {/* Layout explanation */}
+        <div className="relative mt-8 grid gap-6 rounded-2xl bg-black/45 p-6 text-sm text-white sm:grid-cols-2 sm:gap-8">
+          <div>
+            <h3 className="text-base font-semibold uppercase tracking-[0.2em]">
+              How the store is organised
+            </h3>
+            <ul className="mt-3 space-y-1.5">
+              <li>• Entrance: best sellers and discovery table</li>
+              <li>• Left side: French perfumes – luxury & designer inspiration</li>
+              <li>• Right side: English perfumes – fresh everyday scents</li>
+              <li>• Center display: Arabic perfumes – bold & long-lasting</li>
+              <li>• Back area: Abby&apos;s Corner Fragrance Bar, our custom mixing station</li>
+              <li>• Checkout: impulse mini perfumes and refills near the exit</li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-base font-semibold uppercase tracking-[0.2em]">
+              Experiences in store
+            </h3>
+            <ul className="mt-3 space-y-1.5">
+              <li>• Create your own perfume sessions (solo, couples, groups)</li>
+              <li>• Gift boxes for birthdays and special occasions</li>
+              <li>• Signature Scent Card to reorder your custom blend</li>
+              <li>• Short perfume education mini-sessions</li>
+              <li>• Refill discounts and VIP perfume membership for loyal clients</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>

@@ -40,47 +40,37 @@ const stores = [
     hours: "Every day from 10:00 AM to 8:30 PM",
     phone: "+237 670-123-456",
   },
-  {
-    name: "Yaoundé",
-    address: "Cameroon",
-    phone: "+237 680-234-567",
-  },
-  {
-    name: "Bamenda",
-    address: "Cameroon",
-    phone: "+237 690-345-678",
-  },
 ];
 
 const aProposLinks = [
-  { label: "About Abby's", href: "#" },
-  { label: "Our stores", href: "#" },
-  { label: "Blog", href: "#" },
-  { label: "Our services", href: "#" },
+  { label: "About Abby's", href: "/about" },
+  { label: "Our stores", href: "/contact" },
+  { label: "Blog", href: "/blog" },
+  { label: "Our services", href: "/about" },
 ];
 
 const servicesLinks = [
-  { label: "Exclusive Offers", href: "#" },
-  { label: "TRY ME", href: "#" },
-  { label: "Loyalty & Referral", href: "#" },
-  { label: "Book an Appointment", href: "#" },
-  { label: "SODILUXE Box", href: "#" },
-  { label: "Abby's & You", href: "#" },
-  { label: "Delivery", href: "#" },
-  { label: "Contact us", href: "#" },
+  { label: "Exclusive Offers", href: "/shop" },
+  { label: "TRY ME", href: "/shop" },
+  { label: "Loyalty & Referral", href: "/about" },
+  { label: "Book an Appointment", href: "/contact" },
+  { label: "SODILUXE Box", href: "/shop" },
+  { label: "Abby's & You", href: "/about" },
+  { label: "Delivery", href: "/contact" },
+  { label: "Contact us", href: "/contact" },
 ];
 
 const compteLinks = [
-  { label: "FAQ", href: "#" },
-  { label: "Legal information", href: "#" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Legal information", href: "/legal-information" },
 ];
 
 const legalLinks = [
-  { label: "Legal notice", href: "#" },
-  { label: "Terms of sale", href: "#" },
-  { label: "Terms of use", href: "#" },
-  { label: "Privacy policy", href: "#" },
-  { label: "Cookie settings", href: "#" },
+  { label: "Legal notice", href: "/legal-notice" },
+  { label: "Terms of sale", href: "/terms-of-sale" },
+  { label: "Terms of use", href: "/terms-of-use" },
+  { label: "Privacy policy", href: "/privacy-policy" },
+  { label: "Cookie settings", href: "/cookie-settings" },
 ];
 
 export default function Footer() {

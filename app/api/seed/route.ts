@@ -1,0 +1,350 @@
+import { NextResponse } from "next/server";
+import connectToDatabase from "@/lib/db/mongodb";
+import Product from "@/lib/db/models/Product";
+import Category from "@/lib/db/models/Category";
+
+const SEED_PRODUCTS = [
+  {
+    name: "Terre d'Hermès",
+    fullName: "TERRE D'HERMÈS - EAU DE PARFUM",
+    brand: "HERMÈS",
+    tags: ["Boisé", "Épicé"],
+    condition: "Very good condition",
+    category: "homme",
+    price: 55800,
+    tete: "Pamplemousse",
+    coeur: "Épices",
+    fond: "Bois de cèdre",
+    volume: "100 ml",
+    stockLeft: 14,
+    image: "/images/product-1.jpg",
+    images: ["/images/product-1.jpg"],
+    rating: 4.8,
+    reviewCount: 24,
+    description: "Terre d'Hermès is a woody spicy perfume that evokes a journey through the lands.",
+    isActive: true,
+  },
+  {
+    name: "Black Orchid",
+    fullName: "BLACK ORCHID - EAU DE PARFUM",
+    brand: "TOM FORD",
+    tags: ["Oriental", "Fleuri"],
+    condition: "New with tag",
+    category: "femme",
+    price: 78720,
+    tete: "Truffe noire",
+    coeur: "Orchidée",
+    fond: "Patchouli",
+    volume: "50 ml",
+    stockLeft: 8,
+    image: "/images/product-2.jpg",
+    images: ["/images/product-2.jpg"],
+    rating: 4.9,
+    reviewCount: 42,
+    description: "Black Orchid is a sensual and mysterious fragrance.",
+    isActive: true,
+  },
+  {
+    name: "N°5",
+    fullName: "N°5 - EAU DE PARFUM",
+    brand: "CHANEL",
+    tags: ["Fleuri", "Aldéhydé"],
+    condition: "New with tag",
+    category: "femme",
+    price: 62320,
+    tete: "Aldéhydes",
+    coeur: "Iris",
+    fond: "Vanille",
+    volume: "100 ml",
+    stockLeft: 22,
+    image: "/images/product-3.png",
+    images: ["/images/product-3.png"],
+    rating: 4.7,
+    reviewCount: 36,
+    description: "Chanel N°5, a timeless icon of women's perfumery.",
+    isActive: true,
+  },
+  {
+    name: "Sauvage",
+    fullName: "SAUVAGE - EAU DE TOILETTE",
+    brand: "DIOR",
+    tags: ["Boisé", "Frais"],
+    condition: "Very good condition",
+    category: "homme",
+    price: 51168,
+    tete: "Bergamote",
+    coeur: "Poivre",
+    fond: "Ambroxan",
+    volume: "100 ml",
+    stockLeft: 5,
+    image: "/images/product-4.jpg",
+    images: ["/images/product-4.jpg"],
+    rating: 4.6,
+    reviewCount: 19,
+    description: "Dior Sauvage, a fresh and spicy fragrance.",
+    isActive: true,
+  },
+  {
+    name: "Wood Sage & Sea Salt",
+    fullName: "WOOD SAGE & SEA SALT - EAU DE COLOGNE",
+    brand: "JO MALONE",
+    tags: ["Frais", "Aromatique"],
+    condition: "New with tag",
+    category: "unisexe",
+    price: 40672,
+    tete: "Feuilles de sauge",
+    coeur: "Varech",
+    fond: "Vétiver",
+    volume: "30 ml",
+    stockLeft: 18,
+    image: "/images/product-5.webp",
+    images: ["/images/product-5.webp"],
+    rating: 4.5,
+    reviewCount: 12,
+    description: "A fresh and aromatic fragrance that evokes seaside walks.",
+    isActive: true,
+  },
+  {
+    name: "Gypsy Water",
+    fullName: "GYPSY WATER - EAU DE PARFUM",
+    brand: "BYREDO",
+    tags: ["Boisé", "Ambré"],
+    condition: "Very good condition",
+    category: "unisexe",
+    price: 88560,
+    tete: "Citron",
+    coeur: "Pin",
+    fond: "Vanille",
+    volume: "50 ml",
+    stockLeft: 11,
+    image: "/images/product-6.png",
+    images: ["/images/product-6.png"],
+    rating: 4.8,
+    reviewCount: 34,
+    description: "Gypsy Water captures the nomadic spirit.",
+    isActive: true,
+  },
+  {
+    name: "Santal 33",
+    fullName: "SANTAL 33 - EAU DE PARFUM",
+    brand: "LE LABO",
+    tags: ["Boisé", "Cuir"],
+    condition: "New with tag",
+    category: "unisexe",
+    price: 108240,
+    tete: "Cardamome",
+    coeur: "Iris",
+    fond: "Santal",
+    volume: "50 ml",
+    stockLeft: 3,
+    image: "/images/product-7.webp",
+    images: ["/images/product-7.webp"],
+    rating: 4.9,
+    reviewCount: 28,
+    description: "Santal 33, an iconic fragrance with notes of sandalwood.",
+    isActive: true,
+  },
+  {
+    name: "Aventus",
+    fullName: "AVENTUS - EAU DE PARFUM",
+    brand: "CREED",
+    tags: ["Boisé", "Fruité"],
+    condition: "Very good condition",
+    category: "homme",
+    price: 144320,
+    tete: "Ananas",
+    coeur: "Bouleau",
+    fond: "Mousse de chêne",
+    volume: "100 ml",
+    stockLeft: 7,
+    image: "/images/product-8.webp",
+    images: ["/images/product-8.webp"],
+    rating: 4.9,
+    reviewCount: 41,
+    description: "Creed Aventus, a legendary fragrance with fruity and woody notes.",
+    isActive: true,
+  },
+];
+
+const SEED_CATEGORIES = [
+  {
+    name: "French perfumes",
+    slug: "french-perfumes",
+    type: "core",
+    description: "Elegant, balanced and sophisticated scents inspired by French perfume houses.",
+    image: "/images/product-1.jpg",
+    isActive: true,
+    showInNav: true,
+    navOrder: 1,
+    sortOrder: 1,
+  },
+  {
+    name: "English perfumes",
+    slug: "english-perfumes",
+    type: "core",
+    description: "Modern, fresh and easy-to-wear fragrances inspired by British perfumery.",
+    image: "/images/product-2.jpg",
+    isActive: true,
+    showInNav: true,
+    navOrder: 2,
+    sortOrder: 2,
+  },
+  {
+    name: "Arabic perfumes",
+    slug: "arabic-perfumes",
+    type: "core",
+    description: "Bold, long-lasting oriental fragrances with presence.",
+    image: "/images/product-3.png",
+    isActive: true,
+    showInNav: true,
+    navOrder: 3,
+    sortOrder: 3,
+  },
+  {
+    name: "Olfactory families",
+    slug: "olfactory-families",
+    type: "secondary",
+    description: "Browse perfumes by scent family - woody, floral, oriental, fresh and more.",
+    image: "/images/product-5.webp",
+    isActive: true,
+    showInNav: true,
+    navOrder: 4,
+    sortOrder: 4,
+  },
+  {
+    name: "Fragrance bar",
+    slug: "fragrance-bar",
+    type: "secondary",
+    description: "Sample and discover new scents at our fragrance bar.",
+    image: "/images/product-6.png",
+    isActive: true,
+    showInNav: true,
+    navOrder: 5,
+    sortOrder: 5,
+  },
+  {
+    name: "Abby's Box",
+    slug: "abbys-box",
+    type: "secondary",
+    description: "Curated monthly perfume discovery boxes.",
+    image: "/images/product-7.webp",
+    isActive: true,
+    showInNav: true,
+    navOrder: 6,
+    sortOrder: 6,
+  },
+  {
+    name: "Gift sets",
+    slug: "gift-sets",
+    type: "secondary",
+    description: "Curated perfume gift boxes for special occasions.",
+    image: "/images/product-8.webp",
+    isActive: true,
+    showInNav: true,
+    navOrder: 7,
+    sortOrder: 7,
+  },
+  {
+    name: "Exclusive Offers",
+    slug: "exclusive-offers",
+    type: "utility",
+    description: "Special deals and limited-time offers.",
+    image: "/images/product-4.jpg",
+    isActive: true,
+    showInNav: true,
+    navOrder: 8,
+    sortOrder: 8,
+  },
+  {
+    name: "Women's perfumes",
+    slug: "femme",
+    type: "core",
+    description: "Feminine fragrances from floral to oriental.",
+    image: "/images/product-2.jpg",
+    isActive: true,
+    showInNav: false,
+    navOrder: 0,
+    sortOrder: 9,
+  },
+  {
+    name: "Men's perfumes",
+    slug: "homme",
+    type: "core",
+    description: "Masculine fragrances from fresh to woody.",
+    image: "/images/product-1.jpg",
+    isActive: true,
+    showInNav: false,
+    navOrder: 0,
+    sortOrder: 10,
+  },
+  {
+    name: "Unisex",
+    slug: "unisexe",
+    type: "core",
+    description: "Gender-neutral fragrances for everyone.",
+    image: "/images/product-5.webp",
+    isActive: true,
+    showInNav: false,
+    navOrder: 0,
+    sortOrder: 11,
+  },
+  {
+    name: "Home & wellness",
+    slug: "home-wellness",
+    type: "secondary",
+    description: "Candles, diffusers and room sprays.",
+    image: "/images/product-4.jpg",
+    isActive: true,
+    showInNav: false,
+    navOrder: 0,
+    sortOrder: 12,
+  },
+];
+
+export async function POST() {
+  try {
+    await connectToDatabase();
+
+    // Check if data already exists
+    const existingProducts = await Product.countDocuments();
+    const existingCategories = await Category.countDocuments();
+
+    let productsCreated = 0;
+    let categoriesCreated = 0;
+
+    // Seed categories if empty
+    if (existingCategories === 0) {
+      await Category.insertMany(SEED_CATEGORIES);
+      categoriesCreated = SEED_CATEGORIES.length;
+    }
+
+    // Seed products if empty
+    if (existingProducts === 0) {
+      await Product.insertMany(SEED_PRODUCTS);
+      productsCreated = SEED_PRODUCTS.length;
+    }
+
+    return NextResponse.json({
+      message: "Database seeded successfully",
+      productsCreated,
+      categoriesCreated,
+      skipped: {
+        products: existingProducts > 0,
+        categories: existingCategories > 0,
+      },
+    });
+  } catch (error) {
+    console.error("Error seeding database:", error);
+    return NextResponse.json(
+      { error: "Failed to seed database" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET() {
+  return NextResponse.json({
+    message: "POST to this endpoint to seed the database with initial data",
+    warning: "Only seeds if collections are empty",
+  });
+}
