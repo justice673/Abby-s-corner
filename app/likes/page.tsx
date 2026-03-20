@@ -154,10 +154,10 @@ export default function LikesPage() {
               <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
                 {products.map((product) => (
                   <ProductCard
-                    key={product.id}
+                    key={product._id}
                     product={product}
-                    onRemove={() => removeFromLikes(product.id)}
-                    onAddToCart={() => addItem(product.id)}
+                    onRemove={() => removeFromLikes(product._id)}
+                    onAddToCart={() => addItem(product._id)}
                   />
                 ))}
               </div>

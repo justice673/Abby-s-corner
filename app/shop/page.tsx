@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Navbar from "../components/Navbar";
@@ -131,7 +131,7 @@ function ProductCard({
   );
 }
 
-export default function ShopPage() {
+function ShopPageInner() {
   const { addItem } = useCart();
   const { likedIds, toggleLike } = useFavorites();
   const searchParams = useSearchParams();
@@ -434,5 +434,22 @@ export default function ShopPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-(--brand-light) text-(--brand-primary)">
+          <Navbar />
+          <main className="mx-auto max-w-[100rem] px-4 py-8 sm:px-6 lg:px-8">
+            <div className="text-sm text-(--brand-primary)/70">Loading products…</div>
+          </main>
+        </div>
+      }
+    >
+      <ShopPageInner />
+    </Suspense>
   );
 }

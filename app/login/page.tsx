@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -12,15 +12,21 @@ import { Loader2, Eye, EyeOff, ArrowLeft, Sparkles } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
-  const error = searchParams.get("error");
+  const [callbackUrl, setCallbackUrl] = useState("/dashboard");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(error || "");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  React.useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const cb = sp.get("callbackUrl") || "/dashboard";
+    const err = sp.get("error") || "";
+    setCallbackUrl(cb);
+    setErrorMessage(err);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

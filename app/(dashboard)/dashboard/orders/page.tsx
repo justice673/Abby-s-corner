@@ -167,7 +167,21 @@ export default function OrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   // New order form state
-  const [newOrder, setNewOrder] = useState({
+  type OrderSource = Order["source"];
+  type PaymentMethod = NonNullable<Order["paymentMethod"]>;
+
+  const [newOrder, setNewOrder] = useState<{
+    customerName: string;
+    customerPhone: string;
+    customerAddress: string;
+    customerCity: string;
+    items: { product: Product; quantity: number }[];
+    deliveryFee: number;
+    discount: number;
+    notes: string;
+    source: OrderSource;
+    paymentMethod: PaymentMethod;
+  }>({
     customerName: "",
     customerPhone: "",
     customerAddress: "",
@@ -176,8 +190,8 @@ export default function OrdersPage() {
     deliveryFee: 0,
     discount: 0,
     notes: "",
-    source: "whatsapp" as const,
-    paymentMethod: "cash" as const,
+    source: "whatsapp" as OrderSource,
+    paymentMethod: "cash" as PaymentMethod,
   });
   const [saving, setSaving] = useState(false);
 

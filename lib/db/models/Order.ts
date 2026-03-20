@@ -144,7 +144,7 @@ OrderSchema.index({ createdAt: -1 });
 OrderSchema.index({ "customer.phone": 1 });
 
 // Generate order reference before saving
-OrderSchema.pre("save", async function (next) {
+OrderSchema.pre("save", async function () {
   if (this.isNew && !this.orderRef) {
     const date = new Date();
     const year = date.getFullYear();
@@ -163,7 +163,6 @@ OrderSchema.pre("save", async function (next) {
     const sequence = String(todayOrderCount + 1).padStart(3, "0");
     this.orderRef = `ABY-${year}${month}${day}-${sequence}`;
   }
-  next();
 });
 
 const Order: Model<IOrder> =

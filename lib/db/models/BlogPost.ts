@@ -84,7 +84,7 @@ BlogPostSchema.index({ slug: 1 });
 BlogPostSchema.index({ status: 1 });
 BlogPostSchema.index({ category: 1 });
 
-BlogPostSchema.pre("save", function (next) {
+BlogPostSchema.pre("save", async function () {
   if (this.isModified("content")) {
     const wordCount = this.content.split(/\s+/).length;
     this.readTime = Math.ceil(wordCount / 200);
@@ -92,7 +92,6 @@ BlogPostSchema.pre("save", function (next) {
   if (this.status === "published" && !this.publishedAt) {
     this.publishedAt = new Date();
   }
-  next();
 });
 
 const BlogPost: Model<IBlogPost> =

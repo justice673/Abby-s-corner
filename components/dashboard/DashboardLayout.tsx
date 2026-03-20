@@ -46,7 +46,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     return pathname === href || pathname.startsWith(href + "/");
   };
 
-  const user = session?.user || { name: "User", email: "" };
+  const user = session?.user || { name: "User", email: "", image: undefined as string | undefined };
   return (
     <SidebarProvider className="bg-(--brand-light)">
       <Sidebar collapsible="icon" className="bg-white text-(--brand-primary)">
