@@ -1,7 +1,10 @@
-// Re-export onboarding-app API type definitions.
+// Minimal API types used by the (removed) onboarding-app shim.
 //
-// The main Next.js build compiles the whole monorepo, and onboarding-app uses
-// `@/lib/api/types`. Our root project aliases `@/` to the repo root, so this
-// shim makes those imports resolve.
-export * from "../../onboarding-app/src/lib/api/types";
+// This repo no longer includes `onboarding-app/`, but Vercel/Next can still
+// compile this file. Keep it lightweight and self-contained.
+
+export interface UserProfile {
+  activeCompanyId?: string | null;
+}
+
 
