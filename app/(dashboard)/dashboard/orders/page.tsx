@@ -23,6 +23,14 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/app/components/ui/sheet";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -684,56 +692,69 @@ export default function OrdersPage() {
           </CardContent>
         </Card>
 
-        {/* Create Order Dialog */}
-        <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-          <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Log New WhatsApp Order</DialogTitle>
-              <DialogDescription>
+        {/* Create Order Sheet */}
+        <Sheet open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+          <SheetContent side="right" className="p-0">
+            <SheetHeader>
+              <SheetTitle>Log New WhatsApp Order</SheetTitle>
+              <SheetDescription>
                 Record an order received via WhatsApp
-              </DialogDescription>
-            </DialogHeader>
+              </SheetDescription>
+            </SheetHeader>
 
-            <div className="grid gap-6 py-4">
+            <div className="flex min-h-0 flex-1 flex-col text-sm text-(--brand-primary)">
+              <div className="min-h-0 flex-1 space-y-6 overflow-y-auto p-4">
               {/* Customer Info */}
               <div className="space-y-4">
                 <h3 className="font-semibold text-(--brand-primary)">Customer Information</h3>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Name *</label>
+                    <label className="text-sm font-medium text-(--brand-primary)">
+                      Name *
+                    </label>
                     <Input
                       placeholder="Customer name"
                       value={newOrder.customerName}
+                      className="text-(--brand-primary) placeholder:text-(--brand-primary)/50"
                       onChange={(e) =>
                         setNewOrder({ ...newOrder, customerName: e.target.value })
                       }
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Phone (WhatsApp) *</label>
+                    <label className="text-sm font-medium text-(--brand-primary)">
+                      Phone (WhatsApp) *
+                    </label>
                     <Input
                       placeholder="+237 6XX XXX XXX"
                       value={newOrder.customerPhone}
+                      className="text-(--brand-primary) placeholder:text-(--brand-primary)/50"
                       onChange={(e) =>
                         setNewOrder({ ...newOrder, customerPhone: e.target.value })
                       }
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Delivery Address</label>
+                    <label className="text-sm font-medium text-(--brand-primary)">
+                      Delivery Address
+                    </label>
                     <Input
                       placeholder="Street address"
                       value={newOrder.customerAddress}
+                      className="text-(--brand-primary) placeholder:text-(--brand-primary)/50"
                       onChange={(e) =>
                         setNewOrder({ ...newOrder, customerAddress: e.target.value })
                       }
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">City</label>
+                    <label className="text-sm font-medium text-(--brand-primary)">
+                      City
+                    </label>
                     <Input
                       placeholder="Douala, Yaoundé, etc."
                       value={newOrder.customerCity}
+                      className="text-(--brand-primary) placeholder:text-(--brand-primary)/50"
                       onChange={(e) =>
                         setNewOrder({ ...newOrder, customerCity: e.target.value })
                       }
@@ -756,7 +777,7 @@ export default function OrdersPage() {
                       >
                         <div className="flex items-center gap-3">
                           <div>
-                            <p className="text-sm font-medium">{item.product.name}</p>
+                            <p className="text-sm font-medium text-(--brand-primary)">{item.product.name}</p>
                             <p className="text-xs text-(--brand-primary)/60">
                               {item.product.brand} • {formatCurrency(item.product.price)}
                             </p>
@@ -766,6 +787,7 @@ export default function OrdersPage() {
                           <Button
                             variant="outline"
                             size="sm"
+                            className="text-(--brand-light) border-black/15"
                             onClick={() =>
                               updateQuantity(item.product._id, item.quantity - 1)
                             }
@@ -776,6 +798,7 @@ export default function OrdersPage() {
                           <Button
                             variant="outline"
                             size="sm"
+                            className="text-(--brand-light) border-black/15 "
                             onClick={() =>
                               updateQuantity(item.product._id, item.quantity + 1)
                             }
@@ -807,7 +830,7 @@ export default function OrdersPage() {
                       >
                         <p className="text-sm font-medium truncate">{product.name}</p>
                         <p className="text-xs text-(--brand-primary)/60">{product.brand}</p>
-                        <p className="mt-1 text-xs font-semibold">
+                        <p className="mt-1 text-xs font-semibold text-(--brand-primary)">
                           {formatCurrency(product.price)}
                         </p>
                       </button>
@@ -825,11 +848,14 @@ export default function OrdersPage() {
                 <h3 className="font-semibold text-(--brand-primary)">Order Details</h3>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Delivery Fee (FCFA)</label>
+                    <label className="text-sm font-medium text-(--brand-primary)">
+                      Delivery Fee (FCFA)
+                    </label>
                     <Input
                       type="number"
                       placeholder="0"
                       value={newOrder.deliveryFee || ""}
+                      className="text-(--brand-primary) placeholder:text-(--brand-primary)/50"
                       onChange={(e) =>
                         setNewOrder({
                           ...newOrder,
@@ -839,11 +865,14 @@ export default function OrdersPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Discount (FCFA)</label>
+                    <label className="text-sm font-medium text-(--brand-primary)">
+                      Discount (FCFA)
+                    </label>
                     <Input
                       type="number"
                       placeholder="0"
                       value={newOrder.discount || ""}
+                      className="text-(--brand-primary) placeholder:text-(--brand-primary)/50"
                       onChange={(e) =>
                         setNewOrder({
                           ...newOrder,
@@ -853,7 +882,9 @@ export default function OrdersPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Order Source</label>
+                    <label className="text-sm font-medium text-(--brand-primary)">
+                      Order Source
+                    </label>
                     <Select
                       value={newOrder.source}
                       onValueChange={(value: "whatsapp" | "direct" | "phone" | "other") =>
@@ -872,7 +903,9 @@ export default function OrdersPage() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Payment Method</label>
+                    <label className="text-sm font-medium text-(--brand-primary)">
+                      Payment Method
+                    </label>
                     <Select
                       value={newOrder.paymentMethod}
                       onValueChange={(value: "cash" | "mobile_money" | "bank_transfer" | "other") =>
@@ -892,10 +925,13 @@ export default function OrdersPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Notes</label>
+                  <label className="text-sm font-medium text-(--brand-primary)">
+                    Notes
+                  </label>
                   <Input
                     placeholder="Any special instructions..."
                     value={newOrder.notes}
+                    className="text-(--brand-primary) placeholder:text-(--brand-primary)/50"
                     onChange={(e) =>
                       setNewOrder({ ...newOrder, notes: e.target.value })
                     }
@@ -926,41 +962,43 @@ export default function OrdersPage() {
                     )}
                     <div className="border-t pt-2">
                       <div className="flex justify-between font-semibold">
-                        <span>Total</span>
+                        <span className="text-(--brand-primary)">Total</span>
                         <span>{formatCurrency(calculateTotal())}</span>
                       </div>
                     </div>
                   </div>
                 </div>
               )}
-            </div>
+              </div>
 
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setCreateDialogOpen(false);
-                  resetNewOrderForm();
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleCreateOrder}
-                disabled={
-                  !newOrder.customerName ||
-                  !newOrder.customerPhone ||
-                  newOrder.items.length === 0 ||
-                  saving
-                }
-                className="bg-(--brand-primary) text-white hover:bg-(--brand-primary)/90"
-              >
-                {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Create Order
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              <SheetFooter>
+                <Button
+                  variant="outline"
+                  className="text-(--brand-light) border-black/15"
+                  onClick={() => {
+                    setCreateDialogOpen(false);
+                    resetNewOrderForm();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleCreateOrder}
+                  disabled={
+                    !newOrder.customerName ||
+                    !newOrder.customerPhone ||
+                    newOrder.items.length === 0 ||
+                    saving
+                  }
+                  className="bg-(--brand-primary) text-white hover:bg-(--brand-primary)/90"
+                >
+                  {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Create Order
+                </Button>
+              </SheetFooter>
+            </div>
+          </SheetContent>
+        </Sheet>
 
         {/* View Order Dialog */}
         <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
