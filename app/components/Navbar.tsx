@@ -40,6 +40,39 @@ interface DropdownItem {
   link?: string;
 }
 
+/** CMS "All brands" row (seed id `toutes-marques`) overrides /api/brands synthetic row (`all-brands`). */
+function findCmsAllBrandsItem(
+  items: Array<{ id: string; label?: string }> | undefined,
+) {
+  if (!items?.length) return undefined;
+  return items.find(
+    (i) =>
+      i.id === "all-brands" ||
+      i.id === "toutes-marques" ||
+      (typeof i.label === "string" && i.label.toLowerCase().trim() === "all brands"),
+  ) as DropdownItem | undefined;
+}
+
+function mergeBrandsWithCms(
+  apiItems: DropdownItem[],
+  cmsMarquesItems: DropdownItem[] | undefined,
+): DropdownItem[] {
+  const cmsAll = findCmsAllBrandsItem(cmsMarquesItems);
+  if (!cmsAll) return apiItems;
+
+  return apiItems.map((item) => {
+    if (item.id !== "all-brands") return item;
+    return {
+      ...item,
+      image: cmsAll.image || item.image,
+      description: cmsAll.description ?? item.description,
+      buttonText: cmsAll.buttonText ?? item.buttonText,
+      link: cmsAll.link || item.link,
+      label: cmsAll.label || item.label,
+    };
+  });
+}
+
 export default function Navbar() {
   const { openCart, totalItems } = useCart();
   const { data: session } = useSession();
@@ -70,22 +103,36 @@ export default function Navbar() {
   useEffect(() => {
     const fetchNavData = async () => {
       try {
-        // Fetch dynamic brands from products
-        const brandsRes = await fetch("/api/brands");
+        const [brandsRes, marquesNavRes, maisonRes, catRes] = await Promise.all([
+          fetch("/api/brands"),
+          fetch("/api/nav-dropdown?key=marques"),
+          fetch("/api/nav-dropdown?key=maison"),
+          fetch("/api/categories/nav"),
+        ]);
+
+        // Brands: product-driven list + CMS overlay for "All brands" image/copy (Navigation → Brands)
         if (brandsRes.ok) {
           const data = await brandsRes.json();
-          const items = data.items || [];
+          let items: DropdownItem[] = data.items || [];
+
+          if (marquesNavRes.ok) {
+            const navData = await marquesNavRes.json();
+            const dropdowns = navData.dropdowns || [];
+            const marques = dropdowns.find(
+              (d: { menuKey: string }) => d.menuKey === "marques",
+            );
+            items = mergeBrandsWithCms(items, marques?.items);
+          }
+
           setMarquesItems(items);
           setHoveredMarquesId(items[0]?.id || null);
         }
 
-        // Fetch Home & wellness dropdown (maison) from nav dropdowns
-        const dropdownRes = await fetch("/api/nav-dropdown?key=maison");
-        if (dropdownRes.ok) {
-          const data = await dropdownRes.json();
+        if (maisonRes.ok) {
+          const data = await maisonRes.json();
           const dropdowns = data.dropdowns || [];
           const maison = dropdowns.find(
-            (d: { menuKey: string }) => d.menuKey === "maison"
+            (d: { menuKey: string }) => d.menuKey === "maison",
           );
           if (maison?.items) {
             setMaisonItems(maison.items);
@@ -93,8 +140,6 @@ export default function Navbar() {
           }
         }
 
-        // Fetch nav categories
-        const catRes = await fetch("/api/categories/nav");
         if (catRes.ok) {
           const data = await catRes.json();
           setNavCategories(data.categories || []);
