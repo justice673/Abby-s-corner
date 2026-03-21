@@ -143,26 +143,27 @@ OrderSchema.index({ status: 1 });
 OrderSchema.index({ createdAt: -1 });
 OrderSchema.index({ "customer.phone": 1 });
 
-// Generate order reference before saving
-OrderSchema.pre("save", async function () {
-  if (this.isNew && !this.orderRef) {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    
-    // Count orders for today to generate sequence
-    const startOfDay = new Date(date.setHours(0, 0, 0, 0));
-    const endOfDay = new Date(date.setHours(23, 59, 59, 999));
-    
-    const Order = mongoose.models.Order;
-    const todayOrderCount = await Order.countDocuments({
-      createdAt: { $gte: startOfDay, $lte: endOfDay },
-    });
-    
-    const sequence = String(todayOrderCount + 1).padStart(3, "0");
-    this.orderRef = `ABY-${year}${month}${day}-${sequence}`;
-  }
+// Generate order reference before validation runs. `orderRef` is required on the
+// schema; if we only set it in pre("save"), Mongoose validates first and throws
+// "Path `orderRef` is required" — which caused POST /api/orders 500 in production.
+OrderSchema.pre("validate", async function () {
+  if (!this.isNew || this.orderRef) return;
+
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+
+  const startOfDay = new Date(year, now.getMonth(), now.getDate(), 0, 0, 0, 0);
+  const endOfDay = new Date(year, now.getMonth(), now.getDate(), 23, 59, 59, 999);
+
+  const OrderModel = mongoose.models.Order as Model<IOrder>;
+  const todayOrderCount = await OrderModel.countDocuments({
+    createdAt: { $gte: startOfDay, $lte: endOfDay },
+  });
+
+  const sequence = String(todayOrderCount + 1).padStart(3, "0");
+  this.orderRef = `ABY-${year}${month}${day}-${sequence}`;
 });
 
 const Order: Model<IOrder> =
