@@ -53,9 +53,9 @@ export interface IOrder extends Document {
 const OrderItemSchema = new Schema<IOrderItem>(
   {
     productId: { type: String, required: true },
-    productName: { type: String, required: true },
-    brand: { type: String, required: true },
-    category: { type: String, required: true },
+    productName: { type: String, required: true, default: "Product" },
+    brand: { type: String, required: true, default: "Unknown" },
+    category: { type: String, required: true, default: "Uncategorized" },
     quantity: { type: Number, required: true, min: 1 },
     unitPrice: { type: Number, required: true, min: 0 },
     totalPrice: { type: Number, required: true, min: 0 },
@@ -149,21 +149,29 @@ OrderSchema.index({ "customer.phone": 1 });
 OrderSchema.pre("validate", async function () {
   if (!this.isNew || this.orderRef) return;
 
+  // Use UTC day boundaries so counts match MongoDB `createdAt` (stored in UTC).
   const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
+  const y = now.getUTCFullYear();
+  const m = now.getUTCMonth();
+  const d = now.getUTCDate();
+  const year = y;
+  const month = String(m + 1).padStart(2, "0");
+  const day = String(d).padStart(2, "0");
 
-  const startOfDay = new Date(year, now.getMonth(), now.getDate(), 0, 0, 0, 0);
-  const endOfDay = new Date(year, now.getMonth(), now.getDate(), 23, 59, 59, 999);
+  const startOfDay = new Date(Date.UTC(y, m, d, 0, 0, 0, 0));
+  const endOfDay = new Date(Date.UTC(y, m, d, 23, 59, 59, 999));
 
-  const OrderModel = mongoose.models.Order as Model<IOrder>;
+  // Always use the registered model name (avoids `mongoose.models` / constructor edge cases in serverless).
+  const OrderModel = mongoose.model<IOrder>("Order");
+
   const todayOrderCount = await OrderModel.countDocuments({
     createdAt: { $gte: startOfDay, $lte: endOfDay },
   });
 
   const sequence = String(todayOrderCount + 1).padStart(3, "0");
-  this.orderRef = `ABY-${year}${month}${day}-${sequence}`;
+  // Random suffix avoids rare duplicate `orderRef` under concurrent saves (E11000).
+  const suffix = Math.floor(1000 + Math.random() * 9000).toString();
+  this.orderRef = `ABY-${year}${month}${day}-${sequence}-${suffix}`;
 });
 
 const Order: Model<IOrder> =

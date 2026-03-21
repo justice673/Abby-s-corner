@@ -1,7 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 import connectToDatabase from "@/lib/db/mongodb";
 import Order from "@/lib/db/models/Order";
 import Customer from "@/lib/db/models/Customer";
+
+type OrderItemInput = {
+  productId?: string;
+  productName?: string;
+  brand?: string;
+  category?: string;
+  quantity?: number;
+  unitPrice?: number;
+};
 
 // GET all orders with filtering and pagination
 export async function GET(request: NextRequest) {
@@ -82,38 +92,79 @@ export async function POST(request: NextRequest) {
     const {
       customer,
       items,
-      deliveryFee = 0,
-      discount = 0,
+      deliveryFee: rawDeliveryFee = 0,
+      discount: rawDiscount = 0,
       notes,
       source = "whatsapp",
       paymentMethod,
     } = body;
 
-    // Calculate totals
-    const subtotal = items.reduce(
-      (sum: number, item: { quantity: number; unitPrice: number }) =>
-        sum + item.quantity * item.unitPrice,
-      0
-    );
-    const total = subtotal + deliveryFee - discount;
+    if (!customer || typeof customer !== "object") {
+      return NextResponse.json(
+        { error: "Invalid payload", details: "customer is required" },
+        { status: 400 }
+      );
+    }
 
-    // Prepare items with totalPrice
-    const orderItems = items.map(
-      (item: { quantity: number; unitPrice: number }) => ({
-        ...item,
-        totalPrice: item.quantity * item.unitPrice,
-      })
-    );
+    if (!Array.isArray(items) || items.length === 0) {
+      return NextResponse.json(
+        { error: "Invalid payload", details: "items must be a non-empty array" },
+        { status: 400 }
+      );
+    }
+
+    const name = String(customer.name ?? "").trim();
+    const phone = String(customer.phone ?? "").trim();
+    if (!name || !phone) {
+      return NextResponse.json(
+        { error: "Invalid payload", details: "customer.name and customer.phone are required" },
+        { status: 400 }
+      );
+    }
+
+    const deliveryFee = Math.max(0, Number(rawDeliveryFee) || 0);
+    const discount = Math.max(0, Number(rawDiscount) || 0);
+
+    const orderItems = items.map((item: OrderItemInput) => {
+      const productId = String(item.productId ?? "").trim();
+      const quantity = Math.max(1, Math.floor(Number(item.quantity) || 0));
+      const unitPrice = Math.max(0, Number(item.unitPrice) || 0);
+      const productName = String(item.productName ?? "").trim() || "Product";
+      const brand = String(item.brand ?? "").trim() || "Unknown";
+      const category = String(item.category ?? "").trim() || "Uncategorized";
+
+      if (!productId) {
+        throw new Error("Each item must include productId");
+      }
+
+      return {
+        productId,
+        productName,
+        brand,
+        category,
+        quantity,
+        unitPrice,
+        totalPrice: quantity * unitPrice,
+      };
+    });
+
+    const subtotal = orderItems.reduce((sum, row) => sum + row.totalPrice, 0);
+    const total = Math.max(0, subtotal + deliveryFee - discount);
 
     // Create the order
     const order = new Order({
-      customer,
+      customer: {
+        name,
+        phone,
+        address: customer.address ? String(customer.address).trim() : undefined,
+        city: customer.city ? String(customer.city).trim() : undefined,
+      },
       items: orderItems,
       subtotal,
       deliveryFee,
       discount,
       total,
-      notes,
+      notes: notes != null ? String(notes) : undefined,
       source,
       paymentMethod,
       status: "pending",
@@ -123,30 +174,58 @@ export async function POST(request: NextRequest) {
     await order.save();
 
     // Update or create customer record
-    if (customer.phone) {
+    try {
       await Customer.findOneAndUpdate(
-        { phone: customer.phone },
+        { phone },
         {
           $set: {
-            name: customer.name,
-            phone: customer.phone,
-            address: customer.address,
-            city: customer.city,
+            name,
+            phone,
+            address: customer.address ? String(customer.address).trim() : undefined,
+            city: customer.city ? String(customer.city).trim() : undefined,
           },
           $inc: {
             totalOrders: 1,
             totalSpent: total,
           },
         },
-        { upsert: true, new: true }
+        { upsert: true, new: true, runValidators: true }
       );
+    } catch (customerErr) {
+      console.error("Order saved but customer upsert failed:", customerErr);
+      // Order already persisted — still return success so the dashboard is not stuck.
     }
 
     return NextResponse.json(order, { status: 201 });
   } catch (error) {
     console.error("Error creating order:", error);
+
+    if (error instanceof Error && error.message.includes("productId")) {
+      return NextResponse.json(
+        { error: "Invalid payload", details: error.message },
+        { status: 400 }
+      );
+    }
+
+    if (error instanceof mongoose.Error.ValidationError) {
+      return NextResponse.json(
+        { error: "Validation failed", details: error.message },
+        { status: 400 }
+      );
+    }
+
+    if (error instanceof Error && error.message.includes("MONGODB_URI")) {
+      return NextResponse.json(
+        { error: "Server misconfiguration", details: error.message },
+        { status: 503 }
+      );
+    }
+
     return NextResponse.json(
-      { error: "Failed to create order" },
+      {
+        error: "Failed to create order",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }

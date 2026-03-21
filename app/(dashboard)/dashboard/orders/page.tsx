@@ -334,7 +334,15 @@ export default function OrdersPage() {
         body: JSON.stringify(orderData),
       });
 
-      if (!res.ok) throw new Error("Failed to create order");
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        const msg =
+          (errBody as { details?: string; error?: string }).details ||
+          (errBody as { error?: string }).error ||
+          `Failed to create order (${res.status})`;
+        console.error("Create order API:", res.status, errBody);
+        throw new Error(msg);
+      }
 
       setCreateDialogOpen(false);
       resetNewOrderForm();
