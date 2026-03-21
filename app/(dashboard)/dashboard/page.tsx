@@ -481,55 +481,55 @@ export default function DashboardPage() {
         </div>
 
         {/* Bottom Row */}
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-2">
           {/* Recent Orders */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle className="text-(--brand-primary)">Recent Orders</CardTitle>
+          <Card className="min-w-0 overflow-hidden">
+            <CardHeader className="flex flex-col gap-3 space-y-0 px-4 pb-4 pt-6 sm:flex-row sm:items-start sm:justify-between sm:px-6 sm:pb-6">
+              <div className="min-w-0">
+                <CardTitle className="text-base text-(--brand-primary) sm:text-lg">
+                  Recent Orders
+                </CardTitle>
                 <CardDescription className="text-(--brand-primary)/60">
                   Latest customer purchases
                 </CardDescription>
               </div>
-              <Link href="/dashboard/orders">
-                <Button variant="ghost" size="sm" className="text-xs">
+              <Link href="/dashboard/orders" className="shrink-0 self-start sm:self-auto">
+                <Button variant="ghost" size="sm" className="h-8 w-fit px-2 text-xs text-(--brand-primary)">
                   View all <ExternalLink className="ml-1 h-3 w-3" />
                 </Button>
               </Link>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
+            <CardContent className="px-4 pb-6 sm:px-6">
               {stats?.recentOrders && stats.recentOrders.length > 0 ? (
-                <div className="space-y-3 sm:space-y-4">
+                <div className="space-y-4">
                   {stats.recentOrders.slice(0, 5).map((order) => (
                     <div
                       key={order._id}
-                      className="flex flex-col gap-2 border-b border-black/5 pb-3 last:border-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:pb-4"
+                      className="flex gap-3 border-b border-black/5 pb-4 last:border-0 last:pb-0"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-(--brand-primary)/5 sm:h-10 sm:w-10">
-                          <RiShoppingBag2Line className="h-4 w-4 text-(--brand-primary) sm:h-5 sm:w-5" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium text-(--brand-primary) truncate">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-(--brand-primary)/5">
+                        <RiShoppingBag2Line className="h-5 w-5 text-(--brand-primary)" />
+                      </div>
+                      <div className="min-w-0 flex-1 space-y-1.5">
+                        <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
+                          <p className="text-sm font-medium leading-tight text-(--brand-primary)">
                             {order.customer.name}
                           </p>
-                          <p className="text-xs text-(--brand-primary)/50 truncate">
-                            {order.items[0]?.productName || order.orderRef}
+                          <p className="shrink-0 text-sm font-semibold tabular-nums text-(--brand-primary)">
+                            {formatCFA(order.total)}
                           </p>
                         </div>
-                      </div>
-                      <div className="flex items-center justify-between pl-12 sm:pl-0 sm:flex-col sm:items-end sm:text-right">
-                        <p className="text-sm font-semibold text-(--brand-primary)">
-                          {formatCFA(order.total)}
+                        <p className="line-clamp-2 break-words text-xs leading-snug text-(--brand-primary)/60">
+                          {order.items[0]?.productName || order.orderRef}
                         </p>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <Badge
                             variant="outline"
-                            className={`text-[10px] ${STATUS_STYLES[order.status] || "bg-gray-100 text-gray-800"}`}
+                            className={`text-[10px] uppercase tracking-wide ${STATUS_STYLES[order.status] || "bg-gray-100 text-gray-800"}`}
                           >
                             {order.status}
                           </Badge>
-                          <span className="text-[10px] text-(--brand-primary)/40">
+                          <span className="text-[10px] text-(--brand-primary)/45">
                             {formatRelativeTime(order.createdAt)}
                           </span>
                         </div>
@@ -546,10 +546,10 @@ export default function DashboardPage() {
                   <p className="mt-1 text-xs text-(--brand-primary)/60">
                     Log your first WhatsApp order to get started
                   </p>
-                  <Link href="/dashboard/orders">
+                  <Link href="/dashboard/orders" className="mt-4 inline-flex w-fit">
                     <Button
                       size="sm"
-                      className="mt-4 bg-(--brand-primary) text-white hover:bg-(--brand-primary)/90"
+                      className="w-fit bg-(--brand-primary) text-white hover:bg-(--brand-primary)/90"
                     >
                       <Plus className="mr-2 h-4 w-4" />
                       Log Order
@@ -561,43 +561,50 @@ export default function DashboardPage() {
           </Card>
 
           {/* Top Products */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-(--brand-primary)">Top Selling Products</CardTitle>
+          <Card className="min-w-0 overflow-hidden">
+            <CardHeader className="space-y-1 px-4 pb-4 pt-6 sm:px-6 sm:pb-6">
+              <CardTitle className="text-base text-(--brand-primary) sm:text-lg">
+                Top Selling Products
+              </CardTitle>
               <CardDescription className="text-(--brand-primary)/60">
                 Best performers this period
               </CardDescription>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
+            <CardContent className="px-4 pb-6 sm:px-6">
               {stats?.topProducts && stats.topProducts.length > 0 ? (
-                <div className="space-y-3 sm:space-y-4">
+                <div className="space-y-4">
                   {stats.topProducts.map((product, idx) => (
                     <div
                       key={product._id}
-                      className="flex items-center justify-between gap-3 border-b border-black/5 pb-3 last:border-0 last:pb-0 sm:pb-4"
+                      className="flex flex-col gap-3 border-b border-black/5 pb-4 last:border-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
                     >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="relative shrink-0">
-                          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg border border-black/10 bg-(--brand-primary)/5 sm:h-12 sm:w-12">
-                            <span className="text-lg font-bold text-(--brand-primary)/30">
-                              {idx + 1}
-                            </span>
-                          </div>
+                      <div className="flex min-w-0 flex-1 items-start gap-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-black/10 bg-(--brand-primary)/5 sm:h-12 sm:w-12">
+                          <span className="text-lg font-bold text-(--brand-primary)/30 sm:text-xl">
+                            {idx + 1}
+                          </span>
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium text-(--brand-primary) truncate">
-                            {product.productName.split(" - ")[0]}
+                          <p className="text-sm font-medium leading-snug text-(--brand-primary)">
+                            <span className="line-clamp-2 sm:line-clamp-1">
+                              {product.productName.split(" - ")[0]}
+                            </span>
                           </p>
-                          <p className="text-xs text-(--brand-primary)/50">{product.brand}</p>
+                          <p className="mt-0.5 text-xs text-(--brand-primary)/55">{product.brand}</p>
                         </div>
                       </div>
-                      <div className="text-right shrink-0">
-                        <p className="text-xs font-semibold text-(--brand-primary) sm:text-sm">
-                          {formatCompact(product.revenue)} FCFA
-                        </p>
-                        <p className="text-[10px] text-(--brand-primary)/50 sm:text-xs">
-                          {product.totalSold} sold
-                        </p>
+                      <div className="flex shrink-0 items-center justify-between gap-3 border-t border-black/5 pt-3 pl-[52px] sm:border-t-0 sm:pt-0 sm:pl-0">
+                        <span className="text-[10px] font-medium uppercase tracking-wide text-(--brand-primary)/45 sm:hidden">
+                          Revenue
+                        </span>
+                        <div className="text-right">
+                          <p className="text-sm font-semibold tabular-nums text-(--brand-primary)">
+                            {formatCompact(product.revenue)} FCFA
+                          </p>
+                          <p className="text-[10px] text-(--brand-primary)/50 sm:text-xs">
+                            {product.totalSold} sold
+                          </p>
+                        </div>
                       </div>
                     </div>
                   ))}

@@ -427,10 +427,14 @@ export default function OrdersPage() {
     window.open(`https://wa.me/${cleanPhone}`, "_blank");
   };
 
-  // Calculate stats
+  // Stats: Pending = not yet confirmed. Processing = confirmed→shipped (active pipeline).
+  // Completed = terminal success (delivered/completed). Not the same as "Confirmed" badge alone.
   const stats = {
     total: orders.length,
-    pending: orders.filter((o) => o.status === "pending" || o.status === "confirmed").length,
+    pending: orders.filter((o) => o.status === "pending").length,
+    processing: orders.filter((o) =>
+      ["confirmed", "preparing", "shipped"].includes(o.status)
+    ).length,
     completed: orders.filter((o) => o.status === "completed" || o.status === "delivered").length,
     revenue: orders
       .filter((o) => o.status !== "cancelled")
@@ -450,58 +454,76 @@ export default function OrdersPage() {
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-(--brand-primary)">Orders</h1>
+          <div className="min-w-0">
+            <h1 className="text-xl font-bold text-(--brand-primary) sm:text-2xl">Orders</h1>
             <p className="text-sm text-(--brand-primary)/60">
               Manage WhatsApp orders and track sales
             </p>
           </div>
           <Button
             onClick={() => setCreateDialogOpen(true)}
-            className="bg-(--brand-primary) text-white hover:bg-(--brand-primary)/90"
+            className="w-fit bg-(--brand-primary) text-white hover:bg-(--brand-primary)/90"
           >
             <Plus className="mr-2 h-4 w-4" />
             Log New Order
           </Button>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardContent className="flex items-center gap-4 p-4">
+        {/* Stats: horizontal scroll on mobile, grid from sm+ */}
+        <div className="-mx-1 overflow-x-auto overflow-y-visible pb-1 [-webkit-overflow-scrolling:touch] sm:mx-0 sm:overflow-visible sm:pb-0">
+          <div className="flex snap-x snap-mandatory gap-3 sm:grid sm:grid-cols-2 sm:gap-4 sm:snap-none lg:grid-cols-3 xl:grid-cols-5">
+          <Card className="min-w-[min(260px,calc(100vw-2.5rem))] shrink-0 snap-start sm:min-w-0 sm:shrink sm:snap-none">
+            <CardContent className="flex items-center gap-3 p-4 sm:gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--brand-primary)/10">
                 <ShoppingCart className="h-6 w-6 text-(--brand-primary)" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-2xl font-bold text-(--brand-primary)">{stats.total}</p>
                 <p className="text-sm text-(--brand-primary)/60">Total Orders</p>
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="flex items-center gap-4 p-4">
+          <Card className="min-w-[min(260px,calc(100vw-2.5rem))] shrink-0 snap-start sm:min-w-0 sm:shrink sm:snap-none">
+            <CardContent className="flex items-center gap-3 p-4 sm:gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100">
                 <Clock className="h-6 w-6 text-amber-600" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-2xl font-bold text-(--brand-primary)">{stats.pending}</p>
                 <p className="text-sm text-(--brand-primary)/60">Pending</p>
+                <p className="text-xs text-(--brand-primary)/45">Awaiting confirmation</p>
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="flex items-center gap-4 p-4">
+          <Card
+            title="Confirmed, preparing, or shipped"
+            className="min-w-[min(260px,calc(100vw-2.5rem))] shrink-0 snap-start sm:min-w-0 sm:shrink sm:snap-none"
+          >
+            <CardContent className="flex items-center gap-3 p-4 sm:gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100">
+                <Package className="h-6 w-6 text-indigo-600" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-2xl font-bold text-(--brand-primary)">{stats.processing}</p>
+                <p className="text-sm text-(--brand-primary)/60">Processing</p>
+                <p className="text-xs text-(--brand-primary)/45">Confirmed → shipped</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="min-w-[min(260px,calc(100vw-2.5rem))] shrink-0 snap-start sm:min-w-0 sm:shrink sm:snap-none">
+            <CardContent className="flex items-center gap-3 p-4 sm:gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100">
                 <CheckCircle className="h-6 w-6 text-emerald-600" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-2xl font-bold text-(--brand-primary)">{stats.completed}</p>
-                <p className="text-sm text-(--brand-primary)/60">Completed</p>
+                <p className="text-sm text-(--brand-primary)/60">Delivered</p>
+                <p className="text-xs text-(--brand-primary)/45">Completed order</p>
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="flex items-center gap-4 p-4">
+          <Card className="min-w-[min(260px,calc(100vw-2.5rem))] shrink-0 snap-start sm:min-w-0 sm:shrink sm:snap-none">
+            <CardContent className="flex items-center gap-3 p-4 sm:gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
                 <DollarSign className="h-6 w-6 text-blue-600" />
               </div>
@@ -511,58 +533,61 @@ export default function OrdersPage() {
               </div>
             </CardContent>
           </Card>
+          </div>
         </div>
 
         {/* Filters */}
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <div className="relative flex-1">
+        <Card className="overflow-hidden">
+          <CardContent className="px-4 pt-6 sm:px-6">
+            <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+              <div className="relative min-w-0 flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--brand-primary)/40" />
                 <Input
                   placeholder="Search orders, customers, phone..."
-                  className="pl-9"
+                  className="w-full min-w-0 pl-9"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full sm:w-[150px]">
-                  <Filter className="mr-2 h-4 w-4" />
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="confirmed">Confirmed</SelectItem>
-                  <SelectItem value="preparing">Preparing</SelectItem>
-                  <SelectItem value="shipped">Shipped</SelectItem>
-                  <SelectItem value="delivered">Delivered</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={paymentFilter} onValueChange={setPaymentFilter}>
-                <SelectTrigger className="w-full sm:w-[150px]">
-                  <SelectValue placeholder="Payment" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Payments</SelectItem>
-                  <SelectItem value="unpaid">Unpaid</SelectItem>
-                  <SelectItem value="partial">Partial</SelectItem>
-                  <SelectItem value="paid">Paid</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:flex sm:w-auto sm:shrink-0 sm:gap-3">
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full min-w-0 sm:w-[min(100%,160px)] md:w-[170px]">
+                    <Filter className="mr-2 h-4 w-4 shrink-0" />
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="confirmed">Confirmed</SelectItem>
+                    <SelectItem value="preparing">Preparing</SelectItem>
+                    <SelectItem value="shipped">Shipped</SelectItem>
+                    <SelectItem value="delivered">Delivered</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={paymentFilter} onValueChange={setPaymentFilter}>
+                  <SelectTrigger className="w-full min-w-0 sm:w-[160px] md:w-[170px]">
+                    <SelectValue placeholder="Payment" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Payments</SelectItem>
+                    <SelectItem value="unpaid">Unpaid</SelectItem>
+                    <SelectItem value="partial">Partial</SelectItem>
+                    <SelectItem value="paid">Paid</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Orders List */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Recent Orders</CardTitle>
+        <Card className="overflow-hidden">
+          <CardHeader className="space-y-1 px-4 sm:px-6">
+            <CardTitle className="text-base sm:text-lg">Recent Orders</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-4 sm:px-6">
             {loading ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-(--brand-primary)/40" />
@@ -673,7 +698,7 @@ export default function OrdersPage() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-2 pt-4">
+                  <div className="flex flex-wrap items-center justify-center gap-2 pt-4">
                     <Button
                       variant="outline"
                       size="sm"
@@ -682,7 +707,7 @@ export default function OrdersPage() {
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
-                    <span className="text-sm text-(--brand-primary)/70">
+                    <span className="min-w-0 text-center text-sm text-(--brand-primary)/70">
                       Page {currentPage} of {totalPages}
                     </span>
                     <Button
@@ -1149,7 +1174,9 @@ export default function OrdersPage() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Payment Status</label>
+                  <label className="text-sm font-medium text-(--brand-primary)">
+                    Payment Status
+                  </label>
                   <Select
                     value={selectedOrder.paymentStatus}
                     onValueChange={(value) =>
@@ -1169,7 +1196,11 @@ export default function OrdersPage() {
               </div>
             )}
             <DialogFooter>
-              <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
+              <Button
+                variant="outline"
+                className="text-(--brand-light) border-black/15 hover:bg-(--brand-primary)/5"
+                onClick={() => setEditDialogOpen(false)}
+              >
                 Close
               </Button>
             </DialogFooter>

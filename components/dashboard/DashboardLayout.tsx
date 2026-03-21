@@ -116,11 +116,14 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           </div>
           <div className="flex items-center gap-2">
             <Button
+              asChild
               variant="outline"
               size="sm"
               className="border-black/10 bg-white text-(--brand-primary) hover:bg-black hover:text-white"
             >
-              Preview store
+              <Link href="/" target="_blank" rel="noopener noreferrer">
+                Preview store
+              </Link>
             </Button>
           </div>
         </header>
